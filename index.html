@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SmartPark - iPhone 16 Pro Edition</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Kanit -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#0a0a0c',
+                        cardbg: '#141419',
+                        cardborder: '#2a1a1f',
+                        crimson: '#e11d48',
+                        crimsonHover: '#be123c',
+                        crimsonDark: '#881337',
+                        accentGold: '#fbbf24',
+                        emeraldLight: '#10b981',
+                        warningOrange: '#f97316',
+                    },
+                    fontFamily: {
+                        kanit: ['Kanit', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: #030304;
+            color: #f8fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-h: 100vh;
+            margin: 0;
+            padding: 10px;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* Phone Frame */
+        .iphone-frame {
+            width: 100%;
+            max-width: 402px;
+            height: 874px;
+            background: #000000;
+            border-radius: 54px;
+            box-shadow: 0 0 0 10px #1f1f24, 0 0 0 12px #383840, 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(225, 29, 72, 0.15);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 4px solid #1a1a20;
+        }
+
+        .iphone-screen {
+            width: 100%;
+            height: 100%;
+            background: #0a0a0c;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            border-radius: 46px;
+        }
+
+        /* Dynamic Island */
+        .dynamic-island {
+            position: absolute;
+            top: 11px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 32px;
+            background-color: #000000;
+            border-radius: 20px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.8);
+        }
+        .dynamic-island.expanded {
+            width: 280px;
+            height: 52px;
+            border-radius: 26px;
+            background: #141419;
+            border: 1px solid #e11d48;
+        }
+
+        .home-indicator {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 135px;
+            height: 5px;
+            background-color: #ffffff;
+            opacity: 0.6;
+            border-radius: 3px;
+            z-index: 90;
+        }
+
+        .screen-scroll::-webkit-scrollbar { width: 4px; }
+        .screen-scroll::-webkit-scrollbar-track { background: transparent; }
+        .screen-scroll::-webkit-scrollbar-thumb { background: #3f2a33; border-radius: 4px; }
+
+        .glass-panel {
+            background: linear-gradient(145deg, rgba(20, 20, 25, 0.9), rgba(10, 10, 12, 0.95));
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(225, 29, 72, 0.2);
+        }
+
+        .glow-red { box-shadow: 0 0 15px rgba(225, 29, 72, 0.3); }
+
+        @keyframes dash {
+            to { stroke-dashoffset: -40; }
+        }
+        .nav-path {
+            stroke-dasharray: 8;
+            animation: dash 1s linear infinite;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="iphone-frame">
+        <div class="iphone-screen">
+            <!-- Dynamic Island -->
+            <div id="dynamic-island" class="dynamic-island">
+                <div class="flex items-center space-x-2 text-[10px] text-gray-400">
+                    <span class="w-2 h-2 rounded-full bg-crimson animate-pulse" id="di-dot"></span>
+                    <span id="di-text" class="font-bold text-white truncate max-w-[150px]">SmartPark</span>
+                </div>
+                <div id="di-right" class="text-[10px] text-crimson font-bold">PRO</div>
+            </div>
+
+            <!-- Status Bar -->
+            <div class="w-full pt-3 px-8 pb-2 flex justify-between items-center text-[12px] font-semibold text-gray-300 z-40 select-none">
+                <span id="clock">09:41</span>
+                <div class="flex items-center space-x-2 text-[11px]">
+                    <i class="fa-solid fa-signal"></i>
+                    <i class="fa-solid fa-wifi"></i>
+                    <i class="fa-solid fa-battery-full text-white"></i>
+                </div>
+            </div>
+
+            <!-- VIEWPORT -->
+            <div id="viewport" class="flex-1 overflow-y-auto screen-scroll relative flex flex-col pb-20 px-4 pt-4">
+                
+                <!-- SCREEN 1: ONBOARDING -->
+                <div id="screen-onboarding" class="flex flex-col min-h-full justify-center space-y-6 pb-10">
+                    <div class="text-center">
+                        <!-- Red Beetle SVG Logo -->
+                        <div class="w-32 h-28 mx-auto mb-2 relative">
+                            <svg viewBox="0 0 200 160" class="w-full h-full drop-shadow-[0_0_15px_rgba(225,29,72,0.6)]" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Shadow -->
+                                <ellipse cx="100" cy="145" rx="80" ry="8" fill="#000" opacity="0.5"/>
+                                <!-- Tires -->
+                                <rect x="35" y="115" width="22" height="30" rx="5" fill="#111"/>
+                                <rect x="143" y="115" width="22" height="30" rx="5" fill="#111"/>
+                                <!-- Body Back -->
+                                <path d="M 45 75 Q 50 25 100 25 Q 150 25 155 75 Z" fill="#b91c1c" stroke="#7f1d1d" stroke-width="2"/>
+                                <!-- Windshield -->
+                                <path d="M 52 72 Q 56 32 100 30 Q 144 32 148 72 Z" fill="#38bdf8" stroke="#0284c7" stroke-width="2"/>
+                                <line x1="100" y1="30" x2="100" y2="72" stroke="#b91c1c" stroke-width="3"/>
+                                
+                                <!-- Dog 1 (Right - Brown Pitbull style) -->
+                                <g transform="translate(115, 45)">
+                                    <ellipse cx="15" cy="10" rx="12" ry="10" fill="#443831"/>
+                                    <ellipse cx="7" cy="5" rx="4" ry="8" fill="#443831" transform="rotate(-20 7 5)"/>
+                                    <ellipse cx="23" cy="5" rx="4" ry="8" fill="#443831" transform="rotate(20 23 5)"/>
+                                    <ellipse cx="15" cy="14" rx="6" ry="4" fill="#29201c"/>
+                                    <circle cx="11" cy="9" r="2" fill="#fff"/><circle cx="11" cy="9" r="1" fill="#000"/>
+                                    <circle cx="19" cy="9" r="2" fill="#fff"/><circle cx="19" cy="9" r="1" fill="#000"/>
+                                </g>
+                                <!-- Dog 2 (Left - Black/White) -->
+                                <g transform="translate(60, 48)">
+                                    <ellipse cx="12" cy="10" rx="10" ry="10" fill="#222"/>
+                                    <path d="M 4 4 L 8 10 L 0 10 Z" fill="#222"/>
+                                    <path d="M 20 4 L 24 10 L 16 10 Z" fill="#222"/>
+                                    <path d="M 12 10 Q 16 15 12 20 Q 8 15 12 10 Z" fill="#fff"/>
+                                    <circle cx="9" cy="9" r="2" fill="#fff"/><circle cx="9" cy="9" r="1" fill="#000"/>
+                                    <circle cx="15" cy="9" r="2" fill="#fff"/><circle cx="15" cy="9" r="1" fill="#000"/>
+                                </g>
+
+                                <!-- Body Front -->
+                                <path d="M 30 115 C 28 80 45 72 100 72 C 155 72 172 80 170 115 Z" fill="#e11d48" stroke="#9f1239" stroke-width="2"/>
+                                <line x1="100" y1="72" x2="100" y2="115" stroke="#9f1239" stroke-width="2"/>
+                                <!-- Headlights -->
+                                <circle cx="48" cy="98" r="12" fill="#fef08a" stroke="#d97706" stroke-width="2"/>
+                                <circle cx="152" cy="98" r="12" fill="#fef08a" stroke="#d97706" stroke-width="2"/>
+                                <!-- Bumper -->
+                                <rect x="32" y="116" width="136" height="8" rx="4" fill="#cbd5e1" stroke="#94a3b8" stroke-width="1"/>
+                            </svg>
+                        </div>
+                        <h1 class="text-3xl font-black text-white tracking-wider">SMART<span class="text-crimson">PARK</span></h1>
+                        <p class="text-[10px] text-gray-400 mt-1 uppercase tracking-widest">Premium Parking System</p>
+                    </div>
+
+                    <div class="glass-panel p-5 rounded-3xl space-y-4">
+                        <div class="bg-crimson/10 border border-crimson/30 rounded-xl p-3 text-center">
+                            <p class="text-xs text-crimson font-bold"><i class
