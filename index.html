@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SmartPark - Ultimate Edition</title>
+    <title>SmartPark - Enterprise Edition</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Kanit -->
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <script>
@@ -18,7 +21,6 @@
                         cardborder: '#2a1a1f',
                         crimson: '#e11d48',
                         crimsonHover: '#be123c',
-                        crimsonDark: '#881337',
                         accentGold: '#fbbf24',
                         emeraldLight: '#10b981',
                         warningOrange: '#f97316',
@@ -29,378 +31,464 @@
         }
     </script>
     <style>
+        /* Global & Reset */
         body {
             font-family: 'Kanit', sans-serif;
-            background-color: #030304;
+            background-color: #000;
             color: #f8fafc;
-            display: flex; justify-content: center; align-items: center;
-            min-height: 100vh; min-height: 100dvh;
-            margin: 0; padding: 0; overflow: hidden; user-select: none; -webkit-user-select: none;
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            height: 100vh; height: 100dvh;
+            margin: 0; padding: 0; 
+            overflow: hidden; 
+            user-select: none; -webkit-user-select: none;
         }
-        .iphone-frame {
-            width: 402px; height: 874px; background: #000; border-radius: 54px;
-            box-shadow: 0 0 0 10px #1f1f24, 0 0 0 12px #383840, 0 25px 60px rgba(0,0,0,0.9), 0 0 40px rgba(225,29,72,0.15);
-            position: relative; display: flex; flex-direction: column; border: 4px solid #1a1a20; overflow: hidden;
-            transition: all 0.3s ease;
+
+        /* App Container (Enterprise App Look) */
+        .app-container {
+            width: 100%; 
+            height: 100%; 
+            max-width: 480px; /* จำกัดความกว้างบนคอมพิวเตอร์ */
+            background: #050505; 
+            position: relative; 
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden; 
+            box-shadow: 0 0 40px rgba(225,29,72,0.1);
         }
-        .iphone-screen { width: 100%; height: 100%; background: #050505; display: flex; flex-direction: column; position: relative; border-radius: 46px; overflow: hidden; }
         
-        /* Dynamic Island */
+        /* Dynamic Island (Adapted for Top Status) */
         .dynamic-island {
-            position: absolute; top: 11px; left: 50%; transform: translateX(-50%);
-            width: 120px; height: 32px; background: #000; border-radius: 20px; z-index: 100;
+            position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+            width: 140px; height: 32px; background: #000; border-radius: 20px; z-index: 100;
             display: flex; align-items: center; justify-content: space-between; padding: 0 12px;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 2px 8px rgba(0,0,0,0.8);
+            border: 1px solid #2a1a1f;
         }
-        .dynamic-island.expanded { width: 300px; height: 65px; border-radius: 32px; background: #141419; border: 1px solid #e11d48; padding: 0 16px; }
+        .dynamic-island.expanded { width: 90%; max-width: 320px; height: 65px; border-radius: 32px; background: #141419; border: 1px solid #e11d48; padding: 0 16px; }
         .di-hidden { display: none; }
         .dynamic-island.expanded .di-hidden { display: flex; }
         .dynamic-island.expanded .di-normal { display: none; }
 
-        .home-indicator { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 135px; height: 5px; background: #fff; opacity: 0.6; border-radius: 3px; z-index: 90; }
-        .screen-scroll::-webkit-scrollbar { width: 0; display: none; }
-        
-        .glass { background: linear-gradient(145deg, rgba(20,20,25,0.9), rgba(10,10,12,0.95)); backdrop-filter: blur(10px); border: 1px solid rgba(225,29,72,0.2); }
-        .glow { box-shadow: 0 0 15px rgba(225,29,72,0.3); }
-        
-        /* Screens */
-        .app-screen { display: none; flex: 1; flex-direction: column; overflow-y: auto; overflow-x: hidden; padding-bottom: 90px; }
-        .app-screen.active { display: flex; animation: fade 0.3s ease; }
+        /* Screens (Scrolling Fix) */
+        .app-screen { 
+            display: none; 
+            width: 100%;
+            height: 100%; 
+            overflow-y: auto; 
+            overflow-x: hidden; 
+            -webkit-overflow-scrolling: touch; /* ให้เลื่อนลื่นบนมือถือ */
+            padding-bottom: 120px; /* เว้นที่ให้เมนูด้านล่าง */
+            padding-top: 60px; /* เว้นที่ให้ขอบบน */
+        }
+        .app-screen.active { display: block; animation: fade 0.3s ease; }
         @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* ซ่อน Scrollbar ให้ดูสะอาดตา */
+        .app-screen::-webkit-scrollbar { width: 0; display: none; }
 
-        /* Bottom Nav */
+        /* Bottom Navigation */
         .bottom-nav {
             position: absolute; bottom: 0; left: 0; width: 100%; height: 85px;
-            background: linear-gradient(to top, rgba(5,5,5,1) 60%, rgba(5,5,5,0));
+            background: rgba(10,10,12,0.95);
+            backdrop-filter: blur(15px);
+            border-top: 1px solid #2a1a1f;
             z-index: 50; display: none; justify-content: space-around; align-items: center; padding-bottom: 15px;
         }
         .bottom-nav.active { display: flex; }
-        .nav-item { color: #64748b; display: flex; flex-direction: column; align-items: center; font-size: 10px; gap: 4px; cursor: pointer; transition: 0.2s; }
+        .nav-item { color: #64748b; display: flex; flex-direction: column; align-items: center; font-size: 10px; gap: 4px; cursor: pointer; transition: 0.2s; flex: 1; }
         .nav-item.active { color: #e11d48; text-shadow: 0 0 10px rgba(225,29,72,0.5); }
-        .nav-item i { font-size: 20px; }
+        .nav-item i { font-size: 20px; margin-bottom: 2px; }
 
-        /* Custom Modal */
+        /* Custom Modal (Popup) */
         .custom-modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 200; display: none; justify-content: center; align-items: center; padding: 20px; }
-        .custom-modal { background: #141419; border: 1px solid #2a1a1f; border-radius: 24px; padding: 24px; width: 100%; max-width: 320px; transform: scale(0.9); transition: 0.3s; opacity: 0; }
+        .custom-modal { background: #141419; border: 1px solid #2a1a1f; border-radius: 24px; padding: 24px; width: 100%; max-width: 320px; transform: scale(0.9); transition: 0.3s; opacity: 0; max-height: 85vh; overflow-y: auto; }
         .custom-modal-overlay.active { display: flex; }
         .custom-modal-overlay.active .custom-modal { transform: scale(1); opacity: 1; }
 
         /* Grid */
         .park-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .slot { border-radius: 8px; height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; transition: 0.2s; cursor: pointer; }
-        .slot.free { background: rgba(16,185,129,0.1); border: 1px solid #10b981; color: #10b981; }
-        .slot.occ { background: rgba(225,29,72,0.1); border: 1px solid #e11d48; color: #e11d48; opacity: 0.5; cursor: not-allowed; }
+        .slot { border-radius: 12px; height: 65px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; transition: 0.2s; cursor: pointer; border: 1px solid #2a1a1f; background: #111; }
+        .slot.free { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.5); color: #10b981; }
+        .slot.occ { background: rgba(225,29,72,0.05); border: 1px solid rgba(225,29,72,0.2); color: #e11d48; opacity: 0.5; cursor: not-allowed; }
         .slot.locked { background: rgba(249,115,22,0.1); border: 1px solid #f97316; color: #f97316; cursor: not-allowed; }
-        .slot.mine { background: rgba(251,191,36,0.2); border: 2px solid #fbbf24; color: #fbbf24; box-shadow: 0 0 10px rgba(251,191,36,0.3); }
+        .slot.mine { background: rgba(251,191,36,0.2); border: 2px solid #fbbf24; color: #fbbf24; box-shadow: 0 0 15px rgba(251,191,36,0.2); }
 
-        /* GPS Animation */
-        .gps-path { stroke-dasharray: 10; animation: dash 1s linear infinite; }
-        @keyframes dash { to { stroke-dashoffset: -20; } }
-        .car-marker { transition: all 1s ease-in-out; }
-
-        @media (max-height: 900px) and (min-width: 481px) {
-            .iphone-frame { height: 95vh; width: calc(95vh * (402 / 874)); border-radius: calc(95vh * (54 / 874)); border-width: 2px; }
-            .iphone-screen { border-radius: calc(95vh * (46 / 874)); }
-        }
-        @media (max-width: 480px) {
-            .iphone-frame { width: 100vw; height: 100dvh; border-radius: 0; border: none; max-width: none; box-shadow: none; }
-            .iphone-screen { border-radius: 0; }
-            .dynamic-island { top: 8px; }
-        }
+        /* UI Utilities */
+        .glass { background: linear-gradient(145deg, rgba(20,20,25,0.9), rgba(10,10,12,0.95)); backdrop-filter: blur(10px); border: 1px solid rgba(225,29,72,0.2); }
+        .glow { box-shadow: 0 0 15px rgba(225,29,72,0.4); }
     </style>
 </head>
 <body>
 
-    <div class="iphone-frame">
-        <div class="iphone-screen">
-            <!-- Dynamic Island -->
-            <div id="dynamic-island" class="dynamic-island">
-                <div class="di-normal flex items-center space-x-2 text-[10px] text-gray-400 w-full justify-between">
-                    <div class="flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-crimson animate-pulse"></span>
-                        <span class="font-bold text-white">SmartPark</span>
+    <div class="app-container">
+        
+        <!-- Dynamic Island (Top Status) -->
+        <div id="dynamic-island" class="dynamic-island">
+            <div class="di-normal flex items-center justify-center space-x-2 text-[10px] text-gray-400 w-full">
+                <span class="w-2 h-2 rounded-full bg-crimson animate-pulse"></span>
+                <span class="font-bold text-white tracking-widest">SmartPark</span>
+            </div>
+            <div class="di-hidden w-full h-full items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-crimson/20 flex items-center justify-center text-crimson"><i class="fa-solid fa-car"></i></div>
+                    <div class="flex flex-col">
+                        <span class="text-[10px] text-gray-400" id="di-status">Soft-Lock</span>
+                        <span class="text-sm font-bold text-white" id="di-slot">P2-A4</span>
                     </div>
-                    <div class="text-crimson font-bold">PRO</div>
                 </div>
-                <div class="di-hidden w-full h-full items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-full bg-crimson/20 flex items-center justify-center text-crimson"><i class="fa-solid fa-car"></i></div>
-                        <div class="flex flex-col">
-                            <span class="text-[10px] text-gray-400" id="di-status">Soft-Lock</span>
-                            <span class="text-sm font-bold text-white" id="di-slot">P2-A4</span>
-                        </div>
-                    </div>
-                    <div class="text-right flex flex-col">
-                        <span class="text-lg font-bold text-crimson font-mono" id="di-timer">05:00</span>
-                    </div>
+                <div class="text-right flex flex-col">
+                    <span class="text-lg font-bold text-crimson font-mono" id="di-timer">05:00</span>
                 </div>
             </div>
-
-            <!-- Status Bar -->
-            <div class="w-full pt-3 px-8 pb-2 flex justify-between items-center text-[12px] font-semibold text-gray-300 z-40">
-                <span id="clock">00:00</span>
-                <div class="flex items-center space-x-2 text-[11px]"><i class="fa-solid fa-signal"></i><i class="fa-solid fa-wifi"></i><i class="fa-solid fa-battery-full text-white"></i></div>
-            </div>
-
-            <div id="viewport" class="flex-1 relative flex flex-col screen-scroll">
-                
-                <!-- SCREEN: ONBOARDING -->
-                <div id="screen-onboarding" class="app-screen active px-6 pt-10 justify-center">
-                    <div class="text-center mb-8">
-                        <div class="w-32 h-28 mx-auto mb-2 relative">
-                            <svg viewBox="0 0 200 160" class="w-full h-full drop-shadow-[0_0_15px_rgba(225,29,72,0.6)]" xmlns="http://www.w3.org/2000/svg">
-                                <ellipse cx="100" cy="145" rx="80" ry="8" fill="#000" opacity="0.5"/>
-                                <rect x="35" y="115" width="22" height="30" rx="5" fill="#111"/><rect x="143" y="115" width="22" height="30" rx="5" fill="#111"/>
-                                <path d="M 45 75 Q 50 25 100 25 Q 150 25 155 75 Z" fill="#b91c1c" stroke="#7f1d1d" stroke-width="2"/>
-                                <path d="M 52 72 Q 56 32 100 30 Q 144 32 148 72 Z" fill="#38bdf8" stroke="#0284c7" stroke-width="2"/>
-                                <line x1="100" y1="30" x2="100" y2="72" stroke="#b91c1c" stroke-width="3"/>
-                                <g transform="translate(115, 45)">
-                                    <ellipse cx="15" cy="10" rx="12" ry="10" fill="#443831"/><ellipse cx="7" cy="5" rx="4" ry="8" fill="#443831" transform="rotate(-20 7 5)"/><ellipse cx="23" cy="5" rx="4" ry="8" fill="#443831" transform="rotate(20 23 5)"/><ellipse cx="15" cy="14" rx="6" ry="4" fill="#29201c"/><circle cx="11" cy="9" r="2" fill="#fff"/><circle cx="11" cy="9" r="1" fill="#000"/><circle cx="19" cy="9" r="2" fill="#fff"/><circle cx="19" cy="9" r="1" fill="#000"/>
-                                </g>
-                                <g transform="translate(60, 48)">
-                                    <ellipse cx="12" cy="10" rx="10" ry="10" fill="#222"/><path d="M 4 4 L 8 10 L 0 10 Z" fill="#222"/><path d="M 20 4 L 24 10 L 16 10 Z" fill="#222"/><path d="M 12 10 Q 16 15 12 20 Q 8 15 12 10 Z" fill="#fff"/><circle cx="9" cy="9" r="2" fill="#fff"/><circle cx="9" cy="9" r="1" fill="#000"/><circle cx="15" cy="9" r="2" fill="#fff"/><circle cx="15" cy="9" r="1" fill="#000"/>
-                                </g>
-                                <path d="M 30 115 C 28 80 45 72 100 72 C 155 72 172 80 170 115 Z" fill="#e11d48" stroke="#9f1239" stroke-width="2"/>
-                                <line x1="100" y1="72" x2="100" y2="115" stroke="#9f1239" stroke-width="2"/>
-                                <circle cx="48" cy="98" r="12" fill="#fef08a" stroke="#d97706" stroke-width="2"/><circle cx="152" cy="98" r="12" fill="#fef08a" stroke="#d97706" stroke-width="2"/>
-                                <rect x="32" y="116" width="136" height="8" rx="4" fill="#cbd5e1" stroke="#94a3b8" stroke-width="1"/>
-                            </svg>
-                        </div>
-                        <h1 class="text-3xl font-black text-white tracking-wider">SMART<span class="text-crimson">PARK</span></h1>
-                        <p class="text-xs text-crimson font-bold tracking-widest mt-1">ULTIMATE EDITION</p>
-                    </div>
-                    <div class="space-y-3 w-full">
-                        <button onclick="nav('login')" class="w-full bg-crimson text-white font-bold py-4 rounded-xl glow flex items-center justify-center gap-2">เข้าสู่ระบบ <i class="fa-solid fa-arrow-right"></i></button>
-                        <button onclick="nav('register')" class="w-full bg-cardbg border border-cardborder text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2">สร้างบัญชีผู้ใช้ใหม่</button>
-                    </div>
-                </div>
-
-                <!-- SCREEN: LOGIN -->
-                <div id="screen-login" class="app-screen px-6 pt-10">
-                    <button onclick="nav('onboarding')" class="w-10 h-10 bg-cardbg rounded-full flex justify-center items-center mb-6"><i class="fa-solid fa-arrow-left"></i></button>
-                    <h2 class="text-2xl font-bold text-white mb-2">เข้าสู่ระบบ</h2>
-                    <p class="text-sm text-gray-400 mb-6">กรอกอีเมลและรหัสผ่านของคุณ</p>
-                    
-                    <div class="space-y-4">
-                        <div><label class="text-xs text-gray-400">อีเมล</label><input type="email" id="login-email" class="w-full bg-cardbg border border-cardborder rounded-xl p-3 text-white focus:border-crimson outline-none"></div>
-                        <div><label class="text-xs text-gray-400">รหัสผ่าน</label><input type="password" id="login-pwd" class="w-full bg-cardbg border border-cardborder rounded-xl p-3 text-white focus:border-crimson outline-none"></div>
-                    </div>
-                    <button onclick="doLogin()" class="w-full bg-crimson text-white font-bold py-4 rounded-xl mt-8 glow">เข้าสู่ระบบ</button>
-                </div>
-
-                <!-- SCREEN: REGISTER -->
-                <div id="screen-register" class="app-screen px-6 pt-6">
-                    <button onclick="nav('onboarding')" class="w-10 h-10 bg-cardbg rounded-full flex justify-center items-center mb-4"><i class="fa-solid fa-arrow-left"></i></button>
-                    <h2 class="text-2xl font-bold text-white mb-1">สร้างบัญชีผู้ใช้</h2>
-                    <p class="text-sm text-gray-400 mb-4">กรอกข้อมูลเพื่อรับ 100 แต้มต้อนรับทันที</p>
-                    
-                    <div class="space-y-3">
-                        <div><label class="text-xs text-gray-400">อีเมล</label><input type="email" id="reg-email" class="w-full bg-cardbg border border-cardborder rounded-xl p-3 text-white focus:border-crimson outline-none"></div>
-                        <div><label class="text-xs text-gray-400">ตั้งรหัสผ่าน</label><input type="password" id="reg-pwd" class="w-full bg-cardbg border border-cardborder rounded-xl p-3 text-white focus:border-crimson outline-none"></div>
-                        <div><label class="text-xs text-gray-400">ชื่อ-นามสกุล</label><input type="text" id="reg-name" value="สมาร์ท ไดร์ฟเวอร์" class="w-full bg-cardbg border border-cardborder rounded-xl p-3 text-white focus:border-crimson outline-none"></div>
-                        <div><label class="text-xs text-gray-400">ทะเบียนรถ</label><input type="text" id="reg-plate" value="กข 1234 กทม" class="w-full bg-cardbg border border-cardborder rounded-xl p-3 text-white focus:border-crimson outline-none font-bold"></div>
-                        <div><label class="text-xs text-gray-400">เบอร์โทรศัพท์</label><input type="tel" id="reg-phone" value="0812345678" class="w-full bg-cardbg border border-cardborder rounded-xl p-3 text-white focus:border-crimson outline-none"></div>
-                        
-                        <div>
-                            <label class="text-xs text-gray-400">ประเภทสมาชิก</label>
-                            <div class="flex gap-2 mt-1">
-                                <div id="btn-type-normal" onclick="setMember('normal')" class="flex-1 bg-crimson text-white text-center py-2 rounded-lg text-sm font-bold cursor-pointer border border-crimson">ทั่วไป</div>
-                                <div id="btn-type-vip" onclick="setMember('vip')" class="flex-1 bg-cardbg text-gray-400 text-center py-2 rounded-lg text-sm font-bold cursor-pointer border border-cardborder">VIP อาคาร</div>
-                            </div>
-                        </div>
-                    </div>
-                    <button onclick="doRegister()" class="w-full bg-white text-black font-bold py-4 rounded-xl mt-6">ยืนยันการลงทะเบียน</button>
-                </div>
-
-                <!-- SCREEN: HOME -->
-                <div id="screen-home" class="app-screen px-6 pt-8">
-                    <div class="flex justify-between items-start mb-6">
-                        <div>
-                            <p class="text-xs text-gray-400">สวัสดี, <span id="home-name">คุณสมาร์ท</span></p>
-                            <div class="flex items-center gap-2">
-                                <h2 class="text-xl font-bold text-white"><i class="fa-solid fa-car text-crimson"></i> <span id="home-plate">กข 1234</span></h2>
-                                <span id="home-vip-badge" class="bg-accentGold text-black text-[10px] font-bold px-2 py-0.5 rounded hidden">VIP</span>
-                            </div>
-                            <button onclick="doLogout()" class="mt-2 text-gray-400 hover:text-white text-xs bg-cardbg border border-cardborder px-3 py-1.5 rounded-lg transition-colors"><i class="fa-solid fa-right-from-bracket mr-1"></i> ออกจากระบบ</button>
-                        </div>
-                        <div class="bg-cardbg border border-cardborder px-3 py-1.5 rounded-lg text-center shadow-lg">
-                            <p class="text-[10px] text-gray-400">แต้มสะสม</p>
-                            <p class="text-sm font-bold text-accentGold" id="home-points">100</p>
-                        </div>
-                    </div>
-
-                    <!-- Status Banner -->
-                    <div id="home-status-banner" class="hidden mb-6 bg-crimson/10 border border-crimson p-4 rounded-xl flex justify-between items-center cursor-pointer" onclick="nav('booking-active')">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 bg-crimson text-white rounded-full flex items-center justify-center text-lg"><i class="fa-solid fa-lock"></i></div>
-                            <div><h3 class="text-sm font-bold text-white">กำลัง Soft-Lock ช่องจอด</h3><p class="text-xs text-crimson" id="banner-slot">P2 - A4</p></div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-crimson"></i>
-                    </div>
-
-                    <!-- Quick Actions -->
-                    <div class="grid grid-cols-2 gap-3 mb-6">
-                        <div onclick="nav('findcar')" class="bg-cardbg border border-cardborder p-4 rounded-xl flex flex-col items-center justify-center gap-2 cursor-pointer active:scale-95 transition">
-                            <i class="fa-solid fa-location-crosshairs text-2xl text-emeraldLight"></i>
-                            <span class="text-xs font-bold text-white">หาตำแหน่งรถ (Find My Car)</span>
-                        </div>
-                        <div onclick="nav('receipt')" class="bg-cardbg border border-cardborder p-4 rounded-xl flex flex-col items-center justify-center gap-2 cursor-pointer active:scale-95 transition">
-                            <i class="fa-solid fa-receipt text-2xl text-white"></i>
-                            <span class="text-xs font-bold text-white">ชำระค่าจอด & ใบเสร็จ</span>
-                        </div>
-                    </div>
-
-                    <!-- Floors -->
-                    <h3 class="text-sm font-bold text-gray-400 mb-3">เลือกชั้นที่ต้องการจอด (รวม 354 ช่อง)</h3>
-                    <div class="space-y-3">
-                        <div onclick="openFloor('P1')" class="glass p-4 rounded-xl flex items-center justify-between cursor-pointer">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-accentGold/20 text-accentGold rounded-lg flex justify-center items-center font-bold">P1</div>
-                                <div><h4 class="text-sm font-bold text-white">ชั้น VIP / สมาชิกอาคาร</h4><p class="text-[10px] text-gray-400">เฉพาะผู้มีสิทธิ์</p></div>
-                            </div>
-                            <i class="fa-solid fa-chevron-right text-gray-600"></i>
-                        </div>
-                        <div onclick="openFloor('P2')" class="glass p-4 rounded-xl flex items-center justify-between cursor-pointer">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-cardbg border border-cardborder text-white rounded-lg flex justify-center items-center font-bold">P2</div>
-                                <div><h4 class="text-sm font-bold text-white">ชั้นปกติ (Supermarket)</h4><p class="text-[10px] text-emeraldLight">ว่าง 45 ช่อง</p></div>
-                            </div>
-                            <i class="fa-solid fa-chevron-right text-white"></i>
-                        </div>
-                        <div onclick="openFloor('P3')" class="glass p-4 rounded-xl flex items-center justify-between cursor-pointer">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-cardbg border border-cardborder text-white rounded-lg flex justify-center items-center font-bold">P3</div>
-                                <div><h4 class="text-sm font-bold text-white">ชั้นปกติ (Cinema)</h4><p class="text-[10px] text-emeraldLight">ว่าง 12 ช่อง</p></div>
-                            </div>
-                            <i class="fa-solid fa-chevron-right text-white"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- SCREEN: FLOOR (GRID) -->
-                <div id="screen-floor" class="app-screen px-4 pt-6">
-                    <div class="flex items-center gap-4 mb-6">
-                        <button onclick="nav('home')" class="w-10 h-10 bg-cardbg rounded-full flex justify-center items-center"><i class="fa-solid fa-arrow-left"></i></button>
-                        <h2 class="text-xl font-bold text-white" id="floor-title">ชั้น P2</h2>
-                    </div>
-                    
-                    <div class="flex justify-between items-center mb-4 text-xs">
-                        <div class="flex items-center gap-1"><div class="w-3 h-3 bg-emeraldLight/20 border border-emeraldLight rounded"></div><span class="text-gray-400">ว่าง</span></div>
-                        <div class="flex items-center gap-1"><div class="w-3 h-3 bg-crimson/20 border border-crimson rounded"></div><span class="text-gray-400">ไม่ว่าง</span></div>
-                        <div class="flex items-center gap-1"><div class="w-3 h-3 bg-warningOrange/20 border border-warningOrange rounded"></div><span class="text-gray-400">Soft-Lock</span></div>
-                    </div>
-
-                    <div id="grid-container" class="park-grid pb-10">
-                        <!-- Render via JS -->
-                    </div>
-                </div>
-
-                <!-- SCREEN: SLOT DETAILS -->
-                <div id="screen-slot" class="app-screen px-6 pt-10 relative">
-                    <button onclick="nav('floor')" class="absolute top-6 left-6 w-10 h-10 bg-cardbg rounded-full flex justify-center items-center"><i class="fa-solid fa-arrow-left"></i></button>
-                    
-                    <div class="text-center mt-12 mb-8">
-                        <p class="text-gray-400 text-sm">ช่องจอดที่เลือก</p>
-                        <h1 class="text-6xl font-black text-white my-2" id="detail-slot-name">A4</h1>
-                        <span class="bg-emeraldLight/20 text-emeraldLight px-3 py-1 rounded-full text-xs font-bold">สถานะ: ว่าง</span>
-                    </div>
-
-                    <div class="glass p-5 rounded-2xl mb-6">
-                        <h3 class="text-sm font-bold text-white mb-2"><i class="fa-solid fa-shield text-crimson"></i> ระบบ Soft-Lock (จองชั่วคราว)</h3>
-                        <p class="text-xs text-gray-400 leading-relaxed">
-                            ระบบจะทำการล็อคช่องจอดนี้ให้คุณเป็นเวลา 5 นาที เพื่อขับรถไปยังช่องจอด<br><br>
-                            <span class="text-crimson">*กฎหักแต้ม: หากจองแล้วไม่เข้าจอด หรือไปจอดช่องอื่น จะถูกหัก 30 แต้ม</span>
-                        </p>
-                    </div>
-
-                    <button onclick="startSoftLock()" class="w-full bg-crimson text-white font-bold py-4 rounded-xl glow text-lg">ล็อคช่องจอดนี้ (5 นาที)</button>
-                </div>
-
-                <!-- SCREEN: ACTIVE BOOKING & GPS -->
-                <div id="screen-booking-active" class="app-screen px-6 pt-8">
-                    <h2 class="text-xl font-bold text-center text-white mb-6">กำลังนำทางไปยังช่องจอด</h2>
-                    
-                    <div class="bg-cardbg border border-cardborder rounded-3xl p-6 text-center relative overflow-hidden mb-6">
-                        <p class="text-sm text-gray-400">ช่องจอดของคุณ</p>
-                        <h1 class="text-5xl font-black text-crimson my-2" id="active-slot-name">P2-A4</h1>
-                        
-                        <div class="my-6 relative h-2 bg-gray-800 rounded-full">
-                            <div class="absolute left-0 top-0 h-full bg-emeraldLight rounded-full transition-all" id="time-progress" style="width: 100%;"></div>
-                        </div>
-
-                        <div class="flex justify-center items-end gap-2">
-                            <span class="text-4xl font-mono font-bold text-white" id="active-timer">05:00</span>
-                            <span class="text-sm text-gray-400 mb-1">นาที</span>
-                        </div>
-                    </div>
-
-                    <!-- GPS Map Visual (Animated Road) -->
-                    <div class="w-full h-28 bg-[#111] rounded-2xl border border-gray-800 mb-6 relative overflow-hidden shadow-inner">
-                        <!-- ถนน -->
-                        <div class="absolute top-1/2 left-0 w-full h-12 bg-gray-900 -translate-y-1/2 border-y border-gray-700 flex items-center">
-                            <div class="w-full border-t-2 border-dashed border-gray-500 opacity-50"></div>
-                        </div>
-                        <!-- จุดเริ่มต้น -->
-                        <div class="absolute top-1/2 left-2 -translate-y-1/2 text-[10px] font-bold text-gray-400 bg-black px-2 py-1 rounded">ทางเข้า</div>
-                        <!-- ช่องจอดเป้าหมาย -->
-                        <div class="absolute top-1/2 right-2 -translate-y-1/2 w-12 h-14 bg-crimson/20 border-2 border-crimson rounded text-crimson flex items-center justify-center text-xs font-bold">A4</div>
-                        <!-- รถยนต์ที่ขยับได้ -->
-                        <div id="gps-car" class="absolute top-1/2 left-[10%] -translate-y-1/2 text-emeraldLight text-3xl transition-all duration-1000" style="filter: drop-shadow(0 0 5px rgba(16,185,129,0.5));">
-                            <i class="fa-solid fa-car-side"></i>
-                        </div>
-                        <div class="absolute bg-black/60 backdrop-blur px-3 py-1 rounded-full text-[10px] text-emeraldLight border border-emeraldLight/30 bottom-1 right-1/2 translate-x-1/2 z-10">Indoor GPS Active</div>
-                    </div>
-
-                    <div class="flex gap-3 mb-6">
-                        <button onclick="extendTime()" class="flex-1 bg-cardbg border border-cardborder py-3 rounded-xl text-sm font-bold text-white"><i class="fa-solid fa-plus text-accentGold mr-1"></i> ต่อเวลา 2 นาที</button>
-                        <button onclick="cancelSoftLock()" class="flex-1 bg-cardbg border border-cardborder py-3 rounded-xl text-sm font-bold text-gray-400 hover:text-crimson">ยกเลิกการจอง</button>
-                    </div>
-
-                    <button onclick="simArrive()" class="w-full bg-emeraldLight text-black font-bold py-4 rounded-xl glow text-lg shadow-[0_0_15px_rgba(16,185,129,0.4)]">
-                        <i class="fa-solid fa-camera mr-2"></i> จำลอง AI Sensor ตรวจจับรถ
-                    </button>
-                </div>
-
-                <!-- SCREEN: FIND MY CAR -->
-                <div id="screen-findcar" class="app-screen px-6 pt-10">
-                    <button onclick="nav('home')" class="w-10 h-10 bg-cardbg rounded-full flex justify-center items-center mb-6"><i class="fa-solid fa-arrow-left"></i></button>
-                    <h2 class="text-2xl font-bold text-white mb-2">Find My Car</h2>
-                    
-                    <div id="findcar-content">
-                        <!-- Filled via JS -->
-                    </div>
-                </div>
-
-                <!-- SCREEN: RECEIPT -->
-                <div id="screen-receipt" class="app-screen px-6 pt-10">
-                    <button onclick="nav('home')" class="w-10 h-10 bg-cardbg rounded-full flex justify-center items-center mb-6"><i class="fa-solid fa-arrow-left"></i></button>
-                    <h2 class="text-2xl font-bold text-white mb-4">ใบเสร็จชำระเงิน</h2>
-                    
-                    <div id="receipt-content" class="bg-white p-6 rounded-2xl text-black relative overflow-hidden">
-                        <!-- Filled via JS -->
-                    </div>
-                </div>
-
-            </div> <!-- END VIEWPORT -->
-
-            <!-- Bottom Nav -->
-            <div id="bottom-nav" class="bottom-nav">
-                <div class="nav-item active" id="nav-home" onclick="nav('home')"><i class="fa-solid fa-house"></i><span>หน้าหลัก</span></div>
-                <div class="nav-item" id="nav-findcar" onclick="nav('findcar')"><i class="fa-solid fa-location-dot"></i><span>ตำแหน่งรถ</span></div>
-                <div class="nav-item" id="nav-receipt" onclick="nav('receipt')"><i class="fa-solid fa-receipt"></i><span>ชำระเงิน</span></div>
-            </div>
-            <div class="home-indicator"></div>
         </div>
+
+        <div id="viewport" class="flex-1 relative w-full h-full">
+            
+            <!-- SCREEN: ONBOARDING -->
+            <div id="screen-onboarding" class="app-screen active px-6 pt-10 flex flex-col justify-center h-full">
+                <div class="text-center mb-10">
+                    <div class="w-32 h-28 mx-auto mb-2 relative">
+                        <svg viewBox="0 0 200 160" class="w-full h-full drop-shadow-[0_0_15px_rgba(225,29,72,0.6)]" xmlns="http://www.w3.org/2000/svg">
+                            <ellipse cx="100" cy="145" rx="80" ry="8" fill="#000" opacity="0.5"/>
+                            <rect x="35" y="115" width="22" height="30" rx="5" fill="#111"/><rect x="143" y="115" width="22" height="30" rx="5" fill="#111"/>
+                            <path d="M 45 75 Q 50 25 100 25 Q 150 25 155 75 Z" fill="#b91c1c" stroke="#7f1d1d" stroke-width="2"/>
+                            <path d="M 52 72 Q 56 32 100 30 Q 144 32 148 72 Z" fill="#38bdf8" stroke="#0284c7" stroke-width="2"/>
+                            <line x1="100" y1="30" x2="100" y2="72" stroke="#b91c1c" stroke-width="3"/>
+                            <g transform="translate(115, 45)">
+                                <ellipse cx="15" cy="10" rx="12" ry="10" fill="#443831"/><ellipse cx="7" cy="5" rx="4" ry="8" fill="#443831" transform="rotate(-20 7 5)"/><ellipse cx="23" cy="5" rx="4" ry="8" fill="#443831" transform="rotate(20 23 5)"/><ellipse cx="15" cy="14" rx="6" ry="4" fill="#29201c"/><circle cx="11" cy="9" r="2" fill="#fff"/><circle cx="11" cy="9" r="1" fill="#000"/><circle cx="19" cy="9" r="2" fill="#fff"/><circle cx="19" cy="9" r="1" fill="#000"/>
+                            </g>
+                            <g transform="translate(60, 48)">
+                                <ellipse cx="12" cy="10" rx="10" ry="10" fill="#222"/><path d="M 4 4 L 8 10 L 0 10 Z" fill="#222"/><path d="M 20 4 L 24 10 L 16 10 Z" fill="#222"/><path d="M 12 10 Q 16 15 12 20 Q 8 15 12 10 Z" fill="#fff"/><circle cx="9" cy="9" r="2" fill="#fff"/><circle cx="9" cy="9" r="1" fill="#000"/><circle cx="15" cy="9" r="2" fill="#fff"/><circle cx="15" cy="9" r="1" fill="#000"/>
+                            </g>
+                            <path d="M 30 115 C 28 80 45 72 100 72 C 155 72 172 80 170 115 Z" fill="#e11d48" stroke="#9f1239" stroke-width="2"/>
+                            <line x1="100" y1="72" x2="100" y2="115" stroke="#9f1239" stroke-width="2"/>
+                            <circle cx="48" cy="98" r="12" fill="#fef08a" stroke="#d97706" stroke-width="2"/><circle cx="152" cy="98" r="12" fill="#fef08a" stroke="#d97706" stroke-width="2"/>
+                            <rect x="32" y="116" width="136" height="8" rx="4" fill="#cbd5e1" stroke="#94a3b8" stroke-width="1"/>
+                        </svg>
+                    </div>
+                    <h1 class="text-4xl font-black text-white tracking-wider">SMART<span class="text-crimson">PARK</span></h1>
+                    <p class="text-xs text-gray-400 tracking-widest mt-2 uppercase">The Ultimate Parking Solution</p>
+                </div>
+                <div class="space-y-4 w-full mt-auto mb-10">
+                    <button onclick="nav('login')" class="w-full bg-crimson hover:bg-crimsonHover text-white font-bold py-4 rounded-xl glow flex items-center justify-center gap-2 transition">เข้าสู่ระบบ <i class="fa-solid fa-arrow-right"></i></button>
+                    <button onclick="nav('register')" class="w-full bg-cardbg border border-cardborder text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition">สร้างบัญชีผู้ใช้ใหม่</button>
+                </div>
+            </div>
+
+            <!-- SCREEN: LOGIN -->
+            <div id="screen-login" class="app-screen px-6 pt-6">
+                <button onclick="nav('onboarding')" class="w-10 h-10 bg-cardbg border border-cardborder rounded-full flex justify-center items-center mb-6"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 class="text-2xl font-bold text-white mb-2">เข้าสู่ระบบ</h2>
+                <p class="text-sm text-gray-400 mb-8">กรอกอีเมลและรหัสผ่านเพื่อเข้าใช้งาน</p>
+                
+                <div class="space-y-5">
+                    <div><label class="text-xs text-gray-400 block mb-1">อีเมล</label><input type="email" id="login-email" class="w-full bg-cardbg border border-cardborder rounded-xl p-4 text-white focus:border-crimson outline-none transition"></div>
+                    <div><label class="text-xs text-gray-400 block mb-1">รหัสผ่าน</label><input type="password" id="login-pwd" class="w-full bg-cardbg border border-cardborder rounded-xl p-4 text-white focus:border-crimson outline-none transition"></div>
+                </div>
+                <button onclick="doLogin()" class="w-full bg-crimson text-white font-bold py-4 rounded-xl mt-10 glow transition active:scale-95">เข้าสู่ระบบ</button>
+            </div>
+
+            <!-- SCREEN: REGISTER -->
+            <div id="screen-register" class="app-screen px-6 pt-6">
+                <button onclick="nav('onboarding')" class="w-10 h-10 bg-cardbg border border-cardborder rounded-full flex justify-center items-center mb-4"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 class="text-2xl font-bold text-white mb-1">สร้างบัญชีผู้ใช้</h2>
+                <p class="text-sm text-emeraldLight font-bold mb-6"><i class="fa-solid fa-gift mr-1"></i> สมัครวันนี้รับทันที 100 แต้ม</p>
+                
+                <div class="space-y-4">
+                    <div><label class="text-xs text-gray-400 block mb-1">อีเมล</label><input type="email" id="reg-email" class="w-full bg-cardbg border border-cardborder rounded-xl p-3 text-white focus:border-crimson outline-none transition"></div>
+                    <div><label class="text-xs text-gray-400 block mb-1">ตั้งรหัสผ่าน (6 ตัวอักษรขึ้นไป)</label><input type="password" id="reg-pwd" class="w-full bg-cardbg border border-cardborder rounded-xl p-3 text-white focus:border-crimson outline-none transition"></div>
+                    <div><label class="text-xs text-gray-400 block mb-1">ชื่อ-นามสกุล</label><input type="text" id="reg-name" value="สมาร์ท ไดร์ฟเวอร์" class="w-full bg-cardbg border border-cardborder rounded-xl p-3 text-white focus:border-crimson outline-none transition"></div>
+                    <div class="flex gap-3">
+                        <div class="flex-1"><label class="text-xs text-gray-400 block mb-1">ทะเบียนรถ</label><input type="text" id="reg-plate" value="กข 1234 กทม" class="w-full bg-cardbg border border-cardborder rounded-xl p-3 text-white focus:border-crimson outline-none font-bold transition"></div>
+                        <div class="flex-1"><label class="text-xs text-gray-400 block mb-1">เบอร์โทรศัพท์</label><input type="tel" id="reg-phone" value="0812345678" class="w-full bg-cardbg border border-cardborder rounded-xl p-3 text-white focus:border-crimson outline-none transition"></div>
+                    </div>
+                    
+                    <div>
+                        <label class="text-xs text-gray-400 block mb-1">ประเภทสมาชิก</label>
+                        <div class="flex gap-2">
+                            <div id="btn-type-normal" onclick="setMember('normal')" class="flex-1 bg-crimson text-white text-center py-3 rounded-xl text-sm font-bold cursor-pointer border border-crimson transition">สมาชิกทั่วไป</div>
+                            <div id="btn-type-vip" onclick="setMember('vip')" class="flex-1 bg-cardbg text-gray-400 text-center py-3 rounded-xl text-sm font-bold cursor-pointer border border-cardborder transition">VIP อาคาร</div>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="doRegister()" class="w-full bg-white text-black font-bold py-4 rounded-xl mt-8 transition active:scale-95">ยืนยันการลงทะเบียน</button>
+            </div>
+
+            <!-- SCREEN: HOME -->
+            <div id="screen-home" class="app-screen px-6 pt-6">
+                <!-- Header -->
+                <div class="flex justify-between items-center mb-6 bg-cardbg p-4 rounded-2xl border border-cardborder shadow-lg">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center text-xl text-gray-400 border border-gray-700">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-gray-400 uppercase tracking-wider">ยินดีต้อนรับ</p>
+                            <h2 class="text-lg font-bold text-white" id="home-name">คุณสมาร์ท</h2>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[10px] text-gray-400">แต้มสะสม</p>
+                        <div class="flex items-center gap-1">
+                            <i class="fa-solid fa-coins text-accentGold text-sm"></i>
+                            <span class="text-xl font-bold text-accentGold" id="home-points">100</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Session Widget -->
+                <div id="home-no-booking" class="bg-gradient-to-br from-[#141419] to-[#0a0a0c] border border-cardborder p-6 rounded-3xl mb-6 text-center shadow-lg relative overflow-hidden">
+                    <i class="fa-solid fa-square-parking text-5xl text-gray-700 mb-3"></i>
+                    <h3 class="text-lg font-bold text-white">พร้อมใช้บริการจอดรถ</h3>
+                    <p class="text-xs text-gray-400 mt-1 mb-4">ค้นหาและจองที่จอดรถล่วงหน้า 5 นาที</p>
+                    <button onclick="nav('parking')" class="bg-crimson text-white font-bold py-3 px-8 rounded-xl glow text-sm transition active:scale-95">ค้นหาที่จอดรถ <i class="fa-solid fa-arrow-right ml-1"></i></button>
+                </div>
+
+                <div id="home-has-booking" class="hidden glass p-6 rounded-3xl mb-6 text-center shadow-lg border-crimson/50 relative overflow-hidden cursor-pointer active:scale-95 transition" onclick="nav('booking-active')">
+                    <div class="absolute -right-4 -top-4 w-24 h-24 bg-crimson/20 rounded-full blur-xl"></div>
+                    <i class="fa-solid fa-car-side text-4xl text-crimson mb-2 animate-bounce"></i>
+                    <h3 class="text-sm font-bold text-gray-300">กำลังดำเนินการจอง</h3>
+                    <h1 class="text-3xl font-black text-white my-1" id="banner-slot-name">P2 - A4</h1>
+                    <p class="text-xs text-crimson font-bold">แตะเพื่อดูการนำทาง (GPS)</p>
+                </div>
+
+                <!-- Quick Actions -->
+                <h3 class="text-sm font-bold text-gray-400 mb-3">บริการด่วน</h3>
+                <div class="grid grid-cols-2 gap-3 mb-6">
+                    <div onclick="nav('findcar')" class="bg-cardbg border border-cardborder p-4 rounded-2xl flex flex-col items-center justify-center gap-3 cursor-pointer active:scale-95 transition hover:bg-[#1a1a20]">
+                        <div class="w-12 h-12 bg-emeraldLight/10 text-emeraldLight rounded-full flex items-center justify-center text-xl"><i class="fa-solid fa-location-crosshairs"></i></div>
+                        <span class="text-xs font-bold text-white">ตำแหน่งรถ</span>
+                    </div>
+                    <div onclick="nav('receipt')" class="bg-cardbg border border-cardborder p-4 rounded-2xl flex flex-col items-center justify-center gap-3 cursor-pointer active:scale-95 transition hover:bg-[#1a1a20]">
+                        <div class="w-12 h-12 bg-white/10 text-white rounded-full flex items-center justify-center text-xl"><i class="fa-solid fa-qrcode"></i></div>
+                        <span class="text-xs font-bold text-white">ชำระค่าบริการ</span>
+                    </div>
+                </div>
+                
+                <!-- Promo banner -->
+                <div class="w-full rounded-2xl bg-gradient-to-r from-purple-900 to-indigo-900 p-4 border border-purple-700 flex items-center gap-4">
+                    <i class="fa-solid fa-gift text-3xl text-purple-300"></i>
+                    <div>
+                        <h4 class="text-sm font-bold text-white">แลกแต้มรับส่วนลด</h4>
+                        <p class="text-[10px] text-purple-200">100 แต้ม = ส่วนลดค่าจอด 1 บาท</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCREEN: PARKING (Select Floor) -->
+            <div id="screen-parking" class="app-screen px-6 pt-6">
+                <h2 class="text-2xl font-bold text-white mb-2">เลือกอาคาร/ชั้น</h2>
+                <p class="text-sm text-gray-400 mb-6">ระบบค้นหาที่จอดรถว่างแบบ Real-time</p>
+
+                <div class="space-y-4">
+                    <div onclick="openFloor('P1')" class="glass p-5 rounded-2xl flex items-center justify-between cursor-pointer active:scale-95 transition">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-accentGold/20 text-accentGold border border-accentGold/50 rounded-xl flex justify-center items-center font-black text-lg">P1</div>
+                            <div>
+                                <h4 class="text-base font-bold text-white">ชั้น VIP Members</h4>
+                                <p class="text-xs text-gray-400 mt-1"><i class="fa-solid fa-lock text-[10px]"></i> เฉพาะผู้มีสิทธิ์</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-gray-600"></i>
+                    </div>
+                    
+                    <div onclick="openFloor('P2')" class="bg-cardbg border border-cardborder p-5 rounded-2xl flex items-center justify-between cursor-pointer active:scale-95 transition hover:border-crimson/50">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-[#1a1a20] text-white border border-gray-700 rounded-xl flex justify-center items-center font-black text-lg">P2</div>
+                            <div>
+                                <h4 class="text-base font-bold text-white">โซน Supermarket</h4>
+                                <p class="text-xs text-emeraldLight mt-1 font-bold"><i class="fa-solid fa-circle text-[8px] mr-1"></i> ว่าง 45 ช่อง</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-white"></i>
+                    </div>
+                    
+                    <div onclick="openFloor('P3')" class="bg-cardbg border border-cardborder p-5 rounded-2xl flex items-center justify-between cursor-pointer active:scale-95 transition hover:border-crimson/50">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-[#1a1a20] text-white border border-gray-700 rounded-xl flex justify-center items-center font-black text-lg">P3</div>
+                            <div>
+                                <h4 class="text-base font-bold text-white">โซน Cinema / Food</h4>
+                                <p class="text-xs text-emeraldLight mt-1 font-bold"><i class="fa-solid fa-circle text-[8px] mr-1"></i> ว่าง 12 ช่อง</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-white"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCREEN: FLOOR (GRID) -->
+            <div id="screen-floor" class="app-screen px-4 pt-6">
+                <div class="flex items-center gap-4 mb-6">
+                    <button onclick="nav('parking')" class="w-10 h-10 bg-cardbg border border-cardborder rounded-full flex justify-center items-center"><i class="fa-solid fa-arrow-left"></i></button>
+                    <div>
+                        <h2 class="text-xl font-bold text-white" id="floor-title">ชั้น P2</h2>
+                        <p class="text-xs text-gray-400">เลือกช่องที่ต้องการจอด</p>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between items-center mb-6 bg-cardbg p-3 rounded-xl border border-cardborder text-xs px-4">
+                    <div class="flex items-center gap-2"><div class="w-3 h-3 bg-emeraldLight/20 border border-emeraldLight rounded"></div><span class="text-gray-300">ว่าง</span></div>
+                    <div class="flex items-center gap-2"><div class="w-3 h-3 bg-crimson/20 border border-crimson rounded"></div><span class="text-gray-500">ไม่ว่าง</span></div>
+                    <div class="flex items-center gap-2"><div class="w-3 h-3 bg-warningOrange/20 border border-warningOrange rounded"></div><span class="text-gray-300">จองแล้ว</span></div>
+                </div>
+
+                <div id="grid-container" class="park-grid">
+                    <!-- Render via JS -->
+                </div>
+            </div>
+
+            <!-- SCREEN: SLOT DETAILS -->
+            <div id="screen-slot" class="app-screen px-6 pt-6 relative">
+                <button onclick="nav('floor')" class="w-10 h-10 bg-cardbg border border-cardborder rounded-full flex justify-center items-center mb-6"><i class="fa-solid fa-arrow-left"></i></button>
+                
+                <div class="text-center mt-6 mb-8">
+                    <p class="text-gray-400 text-sm">ช่องจอดที่คุณเลือก</p>
+                    <h1 class="text-[80px] font-black text-white my-0 leading-none" id="detail-slot-name">A4</h1>
+                    <div class="mt-4"><span class="bg-emeraldLight/20 border border-emeraldLight text-emeraldLight px-4 py-1.5 rounded-full text-xs font-bold"><i class="fa-solid fa-check mr-1"></i> พร้อมให้บริการ</span></div>
+                </div>
+
+                <div class="glass p-6 rounded-3xl mb-8 border-crimson/30">
+                    <h3 class="text-base font-bold text-white mb-3"><i class="fa-solid fa-shield text-crimson mr-1"></i> ระบบ Soft-Lock 5 นาที</h3>
+                    <ul class="text-xs text-gray-300 space-y-2 mb-4 leading-relaxed list-disc pl-4">
+                        <li>ระบบจะล็อคช่องจอดนี้ให้คุณทันที</li>
+                        <li>กรุณาขับรถเข้าช่องจอดภายในเวลาที่กำหนด</li>
+                        <li>สามารถกดยกเลิกล่วงหน้าได้โดยไม่เสียแต้ม</li>
+                    </ul>
+                    <div class="bg-crimson/10 border border-crimson/30 rounded-xl p-3">
+                        <p class="text-[10px] text-crimson font-bold leading-tight"><i class="fa-solid fa-triangle-exclamation"></i> กฎหักแต้ม: หากหมดเวลาแล้วไม่เข้าจอด หรือแย่งจอดช่องอื่น จะถูกหัก 30 แต้มทันที</p>
+                    </div>
+                </div>
+
+                <button onclick="startSoftLock()" class="w-full bg-crimson text-white font-bold py-4 rounded-xl glow text-lg transition active:scale-95 shadow-[0_10px_20px_rgba(225,29,72,0.3)]">ยืนยันการล็อคช่องจอด</button>
+            </div>
+
+            <!-- SCREEN: ACTIVE BOOKING & GPS -->
+            <div id="screen-booking-active" class="app-screen px-6 pt-6">
+                <h2 class="text-2xl font-bold text-white mb-6">ระบบนำทาง</h2>
+                
+                <div class="bg-cardbg border border-cardborder rounded-3xl p-6 text-center relative overflow-hidden mb-6 shadow-xl">
+                    <p class="text-sm text-gray-400">เป้าหมายของคุณคือช่อง</p>
+                    <h1 class="text-6xl font-black text-crimson my-2 drop-shadow-lg" id="active-slot-name">P2-A4</h1>
+                    
+                    <div class="my-6 relative h-2.5 bg-gray-800 rounded-full overflow-hidden">
+                        <div class="absolute left-0 top-0 h-full bg-gradient-to-r from-emeraldLight to-teal-400 rounded-full transition-all" id="time-progress" style="width: 100%;"></div>
+                    </div>
+
+                    <div class="flex justify-center items-baseline gap-2">
+                        <span class="text-5xl font-mono font-bold text-white tracking-tighter" id="active-timer">05:00</span>
+                        <span class="text-sm text-gray-400">นาที</span>
+                    </div>
+                </div>
+
+                <!-- GPS Map Visual (Animated Road) -->
+                <div class="w-full h-32 bg-[#0a0a0c] rounded-3xl border border-[#2a1a1f] mb-6 relative overflow-hidden shadow-inner">
+                    <!-- ถนน -->
+                    <div class="absolute top-1/2 left-0 w-full h-16 bg-[#111] -translate-y-1/2 border-y border-gray-800 flex items-center">
+                        <div class="w-full border-t-2 border-dashed border-gray-600 opacity-50"></div>
+                    </div>
+                    <!-- จุดเริ่มต้น -->
+                    <div class="absolute top-1/2 left-3 -translate-y-1/2 text-[10px] font-bold text-gray-400 bg-black border border-gray-700 px-2 py-1 rounded">ทางเข้า</div>
+                    <!-- ช่องจอดเป้าหมาย -->
+                    <div class="absolute top-1/2 right-3 -translate-y-1/2 w-14 h-16 bg-crimson/10 border-2 border-crimson rounded-lg text-crimson flex items-center justify-center text-sm font-bold shadow-[0_0_15px_rgba(225,29,72,0.3)]">A4</div>
+                    <!-- รถยนต์ที่ขยับได้ -->
+                    <div id="gps-car" class="absolute top-1/2 left-[12%] -translate-y-1/2 text-emeraldLight text-4xl transition-all duration-1000 z-10" style="filter: drop-shadow(0 0 10px rgba(16,185,129,0.6));">
+                        <i class="fa-solid fa-car-side"></i>
+                    </div>
+                    <div class="absolute bg-black/80 backdrop-blur px-3 py-1 rounded-full text-[10px] text-emeraldLight border border-emeraldLight/30 bottom-2 right-1/2 translate-x-1/2 z-20"><i class="fa-solid fa-location-arrow mr-1"></i> Indoor GPS Active</div>
+                </div>
+
+                <div class="flex gap-3 mb-6">
+                    <button onclick="extendTime()" class="flex-1 bg-[#1a1a20] border border-gray-700 py-3 rounded-xl text-sm font-bold text-white transition active:scale-95"><i class="fa-solid fa-plus text-accentGold mr-1"></i> ต่อเวลา 2 นาที</button>
+                    <button onclick="cancelSoftLock()" class="flex-1 bg-[#1a1a20] border border-gray-700 py-3 rounded-xl text-sm font-bold text-gray-400 hover:text-crimson transition active:scale-95">ยกเลิกการจอง</button>
+                </div>
+
+                <button onclick="simArrive()" class="w-full bg-emeraldLight text-black font-bold py-4 rounded-xl text-lg shadow-[0_0_20px_rgba(16,185,129,0.4)] transition active:scale-95">
+                    <i class="fa-solid fa-camera mr-2"></i> จำลอง AI Sensor ตรวจจับรถ
+                </button>
+            </div>
+
+            <!-- SCREEN: FIND MY CAR -->
+            <div id="screen-findcar" class="app-screen px-6 pt-6">
+                <h2 class="text-2xl font-bold text-white mb-6">ตำแหน่งรถของคุณ</h2>
+                
+                <div id="findcar-content">
+                    <!-- Filled via JS -->
+                </div>
+            </div>
+
+            <!-- SCREEN: RECEIPT (PAYMENT) -->
+            <div id="screen-receipt" class="app-screen px-6 pt-6">
+                <h2 class="text-2xl font-bold text-white mb-6">ชำระค่าบริการ</h2>
+                
+                <div id="receipt-content" class="bg-[#f8fafc] p-6 rounded-3xl text-black relative overflow-hidden shadow-2xl">
+                    <!-- Filled via JS -->
+                </div>
+            </div>
+
+            <!-- SCREEN: HISTORY (New) -->
+            <div id="screen-history" class="app-screen px-6 pt-6">
+                <h2 class="text-2xl font-bold text-white mb-2">ประวัติการใช้งาน</h2>
+                <p class="text-sm text-gray-400 mb-6">รายการจอดรถและใบเสร็จย้อนหลัง</p>
+                
+                <div class="space-y-4" id="history-list">
+                    <!-- Filled via JS -->
+                </div>
+            </div>
+
+            <!-- SCREEN: PROFILE (New) -->
+            <div id="screen-profile" class="app-screen px-6 pt-6">
+                <h2 class="text-2xl font-bold text-white mb-6">บัญชีผู้ใช้</h2>
+                
+                <div class="bg-cardbg border border-cardborder rounded-3xl p-6 mb-6 text-center">
+                    <div class="w-20 h-20 bg-gray-800 rounded-full flex items-center justify-center text-4xl text-gray-400 mx-auto mb-4 border-2 border-gray-600">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white" id="prof-name">Name</h3>
+                    <p class="text-sm text-gray-400" id="prof-email">email@domain.com</p>
+                    <div class="mt-4 flex justify-center gap-2">
+                        <span class="bg-cardborder text-white px-3 py-1 rounded-full text-xs font-bold" id="prof-plate">กข 1234</span>
+                        <span class="bg-accentGold text-black px-3 py-1 rounded-full text-xs font-bold" id="prof-type">ทั่วไป</span>
+                    </div>
+                </div>
+
+                <div class="space-y-3 mb-8">
+                    <div class="bg-cardbg border border-cardborder p-4 rounded-xl flex justify-between items-center">
+                        <span class="text-sm text-gray-400">เบอร์โทรศัพท์</span>
+                        <span class="text-sm text-white font-bold" id="prof-phone">0812345678</span>
+                    </div>
+                    <div class="bg-cardbg border border-cardborder p-4 rounded-xl flex justify-between items-center">
+                        <span class="text-sm text-gray-400">แต้มสะสมทั้งหมด</span>
+                        <span class="text-sm text-accentGold font-bold" id="prof-points">100</span>
+                    </div>
+                </div>
+
+                <button onclick="doLogout()" class="w-full bg-[#1a1a20] text-crimson font-bold py-4 rounded-xl border border-crimson/30 hover:bg-crimson/10 transition active:scale-95">
+                    <i class="fa-solid fa-right-from-bracket mr-2"></i> ออกจากระบบ
+                </button>
+            </div>
+
+        </div> <!-- END VIEWPORT -->
+
+        <!-- Bottom Navigation -->
+        <div id="bottom-nav" class="bottom-nav">
+            <div class="nav-item active" id="nav-home" onclick="nav('home')"><i class="fa-solid fa-house"></i><span>หน้าหลัก</span></div>
+            <div class="nav-item" id="nav-parking" onclick="nav('parking')"><i class="fa-solid fa-square-parking"></i><span>จองที่จอด</span></div>
+            <div class="nav-item" id="nav-history" onclick="nav('history')"><i class="fa-solid fa-clock-rotate-left"></i><span>ประวัติ</span></div>
+            <div class="nav-item" id="nav-profile" onclick="nav('profile')"><i class="fa-solid fa-user"></i><span>บัญชี</span></div>
+        </div>
+        
     </div>
 
     <!-- Global Modal UI -->
     <div id="global-modal" class="custom-modal-overlay">
         <div class="custom-modal">
-            <div id="modal-icon" class="text-4xl text-center mb-4"></div>
-            <h3 id="modal-title" class="text-lg font-bold text-white text-center mb-2">Title</h3>
-            <p id="modal-msg" class="text-sm text-gray-400 text-center mb-6">Message</p>
-            <div id="modal-inputs" class="mb-4 hidden"></div>
-            <div class="flex gap-2" id="modal-buttons"></div>
+            <div id="modal-icon" class="text-5xl text-center mb-4"></div>
+            <h3 id="modal-title" class="text-xl font-bold text-white text-center mb-2">Title</h3>
+            <p id="modal-msg" class="text-sm text-gray-400 text-center mb-6 leading-relaxed">Message</p>
+            <div id="modal-inputs" class="mb-6 hidden"></div>
+            <div class="flex gap-3" id="modal-buttons"></div>
         </div>
     </div>
 
@@ -409,6 +497,7 @@
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
+        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyDbwXwvadGBv3SH0RIlpvdCqnDr4PHdN28",
             authDomain: "jediandfriends-f1704.firebaseapp.com",
@@ -423,50 +512,60 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // --- State (Attached to Window for HTML event access) ---
-        window.user = { name: '', plate: '', phone: '', type: 'normal', points: 0 };
+        // --- Global State ---
+        window.user = { name: '', plate: '', phone: '', type: 'normal', points: 0, email: '' };
         window.activeBooking = null; 
         window.parkedCar = null; 
-        window.fine = 0;
         window.timerInterval = null;
-
-        // --- Clock ---
-        setInterval(() => {
-            const d = new Date();
-            document.getElementById('clock').innerText = d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
-        }, 1000);
 
         // --- Firebase Auth Observer ---
         onAuthStateChanged(auth, async (fbUser) => {
             if (fbUser) {
-                // Fetch User Profile
                 const docRef = doc(db, "users", fbUser.uid);
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
                     window.user = docSnap.data();
+                    window.user.email = fbUser.email; // Ensure email is set
                     window.nav('home');
+                } else {
+                    window.nav('onboarding');
                 }
+            } else {
+                window.nav('onboarding');
             }
         });
 
-        // --- Navigation ---
+        // --- Navigation System ---
         window.nav = function(screenId) {
-            document.querySelectorAll('.app-screen').forEach(el => el.classList.remove('active'));
+            // Hide all screens
+            document.querySelectorAll('.app-screen').forEach(el => {
+                el.classList.remove('active');
+                el.scrollTop = 0; // Reset scroll on page change
+            });
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             
-            document.getElementById(`screen-${screenId}`).classList.add('active');
+            // Show target screen
+            const targetScreen = document.getElementById(`screen-${screenId}`);
+            if(targetScreen) targetScreen.classList.add('active');
             
+            // Handle Bottom Nav visibility
             const bnav = document.getElementById('bottom-nav');
-            if(['onboarding', 'register', 'login'].includes(screenId)) {
+            const noNavScreens = ['onboarding', 'register', 'login', 'slot', 'booking-active'];
+            if(noNavScreens.includes(screenId)) {
                 bnav.classList.remove('active');
             } else {
                 bnav.classList.add('active');
-                if(document.getElementById(`nav-${screenId}`)) document.getElementById(`nav-${screenId}`).classList.add('active');
+                if(document.getElementById(`nav-${screenId}`)) {
+                    document.getElementById(`nav-${screenId}`).classList.add('active');
+                }
             }
 
+            // Update Screen Data
             if(screenId === 'home') window.updateHome();
             if(screenId === 'findcar') window.updateFindCar();
             if(screenId === 'receipt') window.updateReceipt();
+            if(screenId === 'history') window.updateHistory();
+            if(screenId === 'profile') window.updateProfile();
         };
 
         // --- Modal System ---
@@ -474,8 +573,8 @@
             const m = document.getElementById('global-modal');
             const icon = document.getElementById('modal-icon');
             
-            if(type === 'success') icon.innerHTML = '<i class="fa-solid fa-circle-check text-emeraldLight"></i>';
-            else if(type === 'error') icon.innerHTML = '<i class="fa-solid fa-circle-xmark text-crimson"></i>';
+            if(type === 'success') icon.innerHTML = '<i class="fa-solid fa-circle-check text-emeraldLight drop-shadow-[0_0_10px_rgba(16,185,129,0.5)]"></i>';
+            else if(type === 'error') icon.innerHTML = '<i class="fa-solid fa-circle-xmark text-crimson drop-shadow-[0_0_10px_rgba(225,29,72,0.5)]"></i>';
             else if(type === 'warn') icon.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-warningOrange"></i>';
             else if(type === 'loading') icon.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-accentGold"></i>';
             else icon.innerHTML = '<i class="fa-solid fa-circle-info text-blue-400"></i>';
@@ -490,11 +589,11 @@
             const btns = document.getElementById('modal-buttons');
             btns.innerHTML = '';
             if(buttons.length === 0) {
-                buttons = [{ text: 'ตกลง', class: 'bg-cardborder text-white w-full', action: () => m.classList.remove('active') }];
+                buttons = [{ text: 'ตกลง', class: 'bg-[#1a1a20] border border-gray-700 text-white w-full', action: () => m.classList.remove('active') }];
             }
             buttons.forEach(b => {
                 let btn = document.createElement('button');
-                btn.className = `py-3 rounded-xl font-bold flex-1 text-sm ${b.class}`;
+                btn.className = `py-3 rounded-xl font-bold flex-1 text-sm transition active:scale-95 ${b.class}`;
                 btn.innerText = b.text;
                 btn.onclick = () => { b.action(); m.classList.remove('active'); };
                 btns.appendChild(btn);
@@ -502,11 +601,19 @@
             m.classList.add('active');
         };
 
-        // --- Registration & Login ---
+        // --- Auth Functions ---
         window.setMember = function(type) {
             window.user.type = type;
-            document.getElementById('btn-type-normal').className = type === 'normal' ? 'flex-1 bg-crimson text-white text-center py-2 rounded-lg text-sm font-bold cursor-pointer border border-crimson' : 'flex-1 bg-cardbg text-gray-400 text-center py-2 rounded-lg text-sm font-bold cursor-pointer border border-cardborder';
-            document.getElementById('btn-type-vip').className = type === 'vip' ? 'flex-1 bg-crimson text-white text-center py-2 rounded-lg text-sm font-bold cursor-pointer border border-crimson' : 'flex-1 bg-cardbg text-gray-400 text-center py-2 rounded-lg text-sm font-bold cursor-pointer border border-cardborder';
+            const btnN = document.getElementById('btn-type-normal');
+            const btnV = document.getElementById('btn-type-vip');
+            
+            if(type === 'normal') {
+                btnN.className = 'flex-1 bg-crimson text-white text-center py-3 rounded-xl text-sm font-bold cursor-pointer border border-crimson transition';
+                btnV.className = 'flex-1 bg-cardbg text-gray-400 text-center py-3 rounded-xl text-sm font-bold cursor-pointer border border-cardborder transition';
+            } else {
+                btnV.className = 'flex-1 bg-crimson text-white text-center py-3 rounded-xl text-sm font-bold cursor-pointer border border-crimson transition';
+                btnN.className = 'flex-1 bg-cardbg text-gray-400 text-center py-3 rounded-xl text-sm font-bold cursor-pointer border border-cardborder transition';
+            }
         };
 
         window.doRegister = async function() {
@@ -518,6 +625,10 @@
 
             if(!email || !pwd || !name || !plate) {
                 window.showModal({ title: 'ข้อมูลไม่ครบ', msg: 'กรุณากรอกข้อมูลให้ครบถ้วน', type: 'error' });
+                return;
+            }
+            if(pwd.length < 6) {
+                window.showModal({ title: 'รหัสผ่านสั้นเกินไป', msg: 'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร', type: 'warn' });
                 return;
             }
 
@@ -533,12 +644,14 @@
 
                 window.showModal({
                     title: 'ลงทะเบียนสำเร็จ',
-                    msg: `ยินดีต้อนรับคุณ ${name}<br>คุณได้รับ 100 แต้มต้อนรับ!`,
+                    msg: `ยินดีต้อนรับคุณ ${name}<br>คุณได้รับ 100 แต้มต้อนรับเข้าสู่ระบบ!`,
                     type: 'success',
-                    buttons: [{ text: 'เข้าสู่แอป', class: 'bg-emeraldLight text-black w-full', action: () => window.nav('home') }]
+                    buttons: [{ text: 'เริ่มต้นใช้งาน', class: 'bg-emeraldLight text-black w-full', action: () => window.nav('home') }]
                 });
             } catch (error) {
-                window.showModal({ title: 'เกิดข้อผิดพลาด', msg: error.message, type: 'error' });
+                let msg = error.message;
+                if(error.code === 'auth/email-already-in-use') msg = 'อีเมลนี้มีผู้ใช้งานแล้ว';
+                window.showModal({ title: 'เกิดข้อผิดพลาด', msg: msg, type: 'error' });
             }
         };
 
@@ -556,33 +669,109 @@
             try {
                 await signInWithEmailAndPassword(auth, email, pwd);
                 document.getElementById('global-modal').classList.remove('active');
-                // The onAuthStateChanged will handle navigation
+                // onAuthStateChanged will route to home
             } catch (error) {
                 window.showModal({ title: 'ล็อกอินล้มเหลว', msg: 'อีเมลหรือรหัสผ่านไม่ถูกต้อง', type: 'error' });
             }
         };
 
         window.doLogout = function() {
-            signOut(auth).then(() => {
-                window.user = { name: '', plate: '', phone: '', type: 'normal', points: 0 };
-                window.nav('onboarding');
+            window.showModal({
+                title: 'ออกจากระบบ?',
+                msg: 'คุณต้องการออกจากระบบใช่หรือไม่?',
+                type: 'warn',
+                buttons: [
+                    { text: 'ยกเลิก', class: 'bg-[#1a1a20] border border-gray-700 text-white', action: () => {} },
+                    { text: 'ออกจากระบบ', class: 'bg-crimson text-white', action: () => {
+                        signOut(auth).then(() => {
+                            window.user = { name: '', plate: '', phone: '', type: 'normal', points: 0, email: '' };
+                            window.nav('onboarding');
+                        });
+                    }}
+                ]
             });
         };
 
+        // --- Screen Updaters ---
         window.updateHome = function() {
             document.getElementById('home-name').innerText = `คุณ ${window.user.name}`;
-            document.getElementById('home-plate').innerText = window.user.plate;
             document.getElementById('home-points').innerText = window.user.points;
-            if(window.user.type === 'vip') document.getElementById('home-vip-badge').classList.remove('hidden');
-            else document.getElementById('home-vip-badge').classList.add('hidden');
             
-            const banner = document.getElementById('home-status-banner');
-            if(window.activeBooking) {
-                banner.classList.remove('hidden');
-                document.getElementById('banner-slot').innerText = `${window.activeBooking.floor} - ${window.activeBooking.slot}`;
+            const btnNoBook = document.getElementById('home-no-booking');
+            const btnHasBook = document.getElementById('home-has-booking');
+            
+            if(window.activeBooking || window.parkedCar) {
+                btnNoBook.classList.add('hidden');
+                btnHasBook.classList.remove('hidden');
+                
+                let text = window.parkedCar ? 'จอดรถแล้วที่' : 'กำลังดำเนินการจอง';
+                let slot = window.parkedCar ? `${window.parkedCar.floor} - ${window.parkedCar.slot}` : `${window.activeBooking.floor} - ${window.activeBooking.slot}`;
+                
+                btnHasBook.querySelector('h3').innerText = text;
+                document.getElementById('banner-slot-name').innerText = slot;
+                
+                if(window.parkedCar) {
+                    btnHasBook.querySelector('p').innerText = "แตะเพื่อดูรายละเอียดบิล";
+                    btnHasBook.onclick = () => window.nav('receipt');
+                    btnHasBook.querySelector('i.fa-car-side').className = "fa-solid fa-car-on text-4xl text-emeraldLight mb-2";
+                    btnHasBook.classList.replace('border-crimson/50', 'border-emeraldLight/50');
+                } else {
+                    btnHasBook.querySelector('p').innerText = "แตะเพื่อดูการนำทาง (GPS)";
+                    btnHasBook.onclick = () => window.nav('booking-active');
+                    btnHasBook.querySelector('i.fa-car-on')?.setAttribute('class', "fa-solid fa-car-side text-4xl text-crimson mb-2 animate-bounce");
+                    btnHasBook.classList.replace('border-emeraldLight/50', 'border-crimson/50');
+                }
             } else {
-                banner.classList.add('hidden');
+                btnNoBook.classList.remove('hidden');
+                btnHasBook.classList.add('hidden');
             }
+        };
+
+        window.updateProfile = function() {
+            document.getElementById('prof-name').innerText = window.user.name;
+            document.getElementById('prof-email').innerText = window.user.email || '-';
+            document.getElementById('prof-plate').innerText = window.user.plate;
+            document.getElementById('prof-phone').innerText = window.user.phone;
+            document.getElementById('prof-points').innerText = window.user.points;
+            
+            let typeBadge = document.getElementById('prof-type');
+            if(window.user.type === 'vip') {
+                typeBadge.innerText = 'VIP Member';
+                typeBadge.className = 'bg-accentGold text-black px-3 py-1 rounded-full text-xs font-bold';
+            } else {
+                typeBadge.innerText = 'ทั่วไป';
+                typeBadge.className = 'bg-gray-700 text-white px-3 py-1 rounded-full text-xs font-bold';
+            }
+        };
+
+        window.updateHistory = function() {
+            const list = document.getElementById('history-list');
+            // Mock History Data
+            const mockData = [
+                { date: 'วันนี้ 14:20', slot: 'P2-A4', price: 40, points: '+10' },
+                { date: 'เมื่อวาน 09:15', slot: 'P3-B2', price: 0, points: '+10' }, // Free 2 hrs
+                { date: '12 ต.ค. 18:30', slot: 'P2-A1', price: 80, points: '+10' }
+            ];
+
+            list.innerHTML = '';
+            mockData.forEach(d => {
+                let div = document.createElement('div');
+                div.className = 'bg-cardbg border border-cardborder p-4 rounded-xl flex justify-between items-center';
+                div.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-[#1a1a20] rounded-lg flex items-center justify-center text-gray-400"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                        <div>
+                            <h4 class="text-sm font-bold text-white">${d.slot}</h4>
+                            <p class="text-[10px] text-gray-400">${d.date}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm font-bold ${d.price > 0 ? 'text-white' : 'text-emeraldLight'}">${d.price > 0 ? '฿'+d.price : 'จอดฟรี'}</p>
+                        <p class="text-[10px] text-accentGold">${d.points} แต้ม</p>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
         };
 
         // --- Floor & Grid ---
@@ -607,8 +796,8 @@
                 div.innerText = slotName;
                 
                 let status = 'free';
-                if(i%5===0) status = 'occ';
-                if(i%7===0) status = 'locked';
+                if(i%5===0) status = 'occ'; // จำลองว่ามีคนจอด
+                if(i%7===0) status = 'locked'; // จำลองว่าคนอื่นจอง
 
                 if(window.parkedCar && window.parkedCar.floor === window.currentFloor && window.parkedCar.slot === slotName) status = 'mine';
                 if(window.activeBooking && window.activeBooking.floor === window.currentFloor && window.activeBooking.slot === slotName) status = 'locked';
@@ -618,7 +807,9 @@
                 if(status === 'free') {
                     div.onclick = () => window.selectSlot(slotName);
                 } else if(status === 'mine') {
-                    div.innerHTML = `<i class="fa-solid fa-car text-xl mb-1"></i>${slotName}`;
+                    div.innerHTML = `<i class="fa-solid fa-car text-xl mb-1 text-accentGold"></i>${slotName}`;
+                } else if(status === 'occ') {
+                    div.innerHTML = `<i class="fa-solid fa-car text-xl mb-1 text-crimson/50"></i>${slotName}`;
                 }
                 container.appendChild(div);
             }
@@ -633,16 +824,16 @@
             window.nav('slot');
         };
 
-        // --- Soft Lock & Realtime GPS ---
+        // --- Booking (Soft Lock) ---
         window.startSoftLock = function() {
             const slotName = document.getElementById('detail-slot-name').innerText;
             window.activeBooking = { floor: window.currentFloor, slot: slotName, time: 300 }; // 5 mins
             
             window.showModal({
                 title: 'ล็อคช่องจอดสำเร็จ',
-                msg: `ล็อคช่อง ${window.currentFloor}-${slotName} สำเร็จ<br>กรุณาเข้าจอดภายใน 5 นาที`,
+                msg: `ล็อคช่อง <span class="font-bold text-white">${window.currentFloor}-${slotName}</span> สำเร็จ<br>กรุณาเข้าจอดภายใน 5 นาที`,
                 type: 'success',
-                buttons: [{ text: 'เริ่มนำทาง (GPS)', class: 'bg-crimson text-white w-full', action: () => { window.nav('booking-active'); window.updateBookingUI(); } }]
+                buttons: [{ text: 'เริ่มนำทาง (GPS)', class: 'bg-emeraldLight text-black w-full', action: () => { window.nav('booking-active'); window.updateBookingUI(); } }]
             });
             window.updateDI();
             
@@ -669,13 +860,12 @@
             
             // GPS Car Animation Logic
             const car = document.getElementById('gps-car');
-            const targetSlot = document.querySelector('#screen-booking-active .absolute.right-2');
+            const targetSlot = document.querySelector('#screen-booking-active .absolute.right-3');
             if(car && targetSlot) {
                 targetSlot.innerText = window.activeBooking.slot;
-                // Calculate position percentage: Starts at 10%, goes up to 80%
                 let timeElapsed = 300 - window.activeBooking.time;
-                let percent = 10 + ((timeElapsed / 300) * 70); 
-                car.style.left = `${Math.min(percent, 80)}%`;
+                let percent = 12 + ((timeElapsed / 300) * 70); // From 12% to ~82%
+                car.style.left = `${Math.min(percent, 82)}%`;
             }
         };
 
@@ -686,9 +876,13 @@
                 if(window.parkedCar) {
                     document.getElementById('di-status').innerText = 'จอดแล้ว';
                     document.getElementById('di-timer').innerText = 'Parked';
+                    document.getElementById('di-timer').className = 'text-lg font-bold text-emeraldLight';
                     document.getElementById('di-slot').innerText = `${window.parkedCar.floor}-${window.parkedCar.slot}`;
+                    di.querySelector('div.bg-crimson\\/20').className = "w-8 h-8 rounded-full bg-emeraldLight/20 flex items-center justify-center text-emeraldLight";
                 } else {
                     document.getElementById('di-status').innerText = 'Soft-Lock';
+                    document.getElementById('di-timer').className = 'text-lg font-bold text-crimson font-mono';
+                    di.querySelector('div.bg-emeraldLight\\/20')?.setAttribute('class', "w-8 h-8 rounded-full bg-crimson/20 flex items-center justify-center text-crimson");
                 }
             } else {
                 di.classList.remove('expanded');
@@ -704,10 +898,10 @@
         window.cancelSoftLock = function() {
             window.showModal({
                 title: 'ยกเลิกการจอง?',
-                msg: 'คุณแน่ใจหรือไม่ที่จะยกเลิก? (ไม่เสียแต้ม หากยกเลิกก่อนเวลาหมด)',
+                msg: 'คุณแน่ใจหรือไม่ที่จะยกเลิก? <br>(ไม่เสียแต้ม หากยกเลิกก่อนเวลาหมด)',
                 type: 'warn',
                 buttons: [
-                    { text: 'ไม่ยกเลิก', class: 'bg-cardborder text-white', action: () => {} },
+                    { text: 'ไม่ยกเลิก', class: 'bg-[#1a1a20] border border-gray-700 text-white', action: () => {} },
                     { text: 'ยืนยันยกเลิก', class: 'bg-crimson text-white', action: () => {
                         clearInterval(window.timerInterval);
                         window.activeBooking = null;
@@ -723,7 +917,6 @@
             window.activeBooking = null;
             window.user.points = Math.max(0, window.user.points - 30);
             
-            // Update Firestore if logged in
             if(auth.currentUser) {
                 await setDoc(doc(db, "users", auth.currentUser.uid), { points: window.user.points }, { merge: true });
             }
@@ -737,11 +930,12 @@
             });
         };
 
+        // --- AI Sensor Simulation ---
         window.simArrive = function() {
             window.showModal({
                 title: 'AI Ceiling Sensor',
                 msg: 'ระบบกล้องบนเพดานกำลังสแกนป้ายทะเบียนรถที่เข้าจอดในช่องนี้...',
-                html: `<input type="text" id="sim-plate" value="${window.user.plate}" class="w-full bg-black border border-gray-700 rounded-lg p-2 text-white text-center mt-2 font-bold" placeholder="ป้ายทะเบียน">`,
+                html: `<input type="text" id="sim-plate" value="${window.user.plate}" class="w-full bg-black border border-gray-700 rounded-xl p-3 text-white text-center mt-2 font-bold text-lg outline-none focus:border-emeraldLight" placeholder="ป้ายทะเบียน">`,
                 buttons: [
                     { text: 'จำลองการเข้าจอด', class: 'bg-emeraldLight text-black w-full', action: window.processSensor }
                 ]
@@ -770,7 +964,7 @@
             } else {
                 window.showModal({
                     title: 'ทะเบียนไม่ตรงกัน!',
-                    msg: `พบรถคันอื่น (${detectedPlate}) เข้ามาจอดในช่อง Soft-Lock ของคุณ<br><br>ระบบกำลังส่งเสียงเตือนภัยที่ช่องจอด และออกค่าปรับไปยังรถคันดังกล่าว`,
+                    msg: `พบรถคันอื่น <span class="text-warningOrange font-bold">(${detectedPlate})</span> เข้ามาจอดในช่อง Soft-Lock ของคุณ<br><br>ระบบกำลังส่งเสียงเตือนภัยที่ช่องจอด และออกค่าปรับไปยังรถคันดังกล่าว`,
                     type: 'error',
                     buttons: [
                         { text: 'ยกเลิกการจองของฉัน', class: 'bg-crimson text-white w-full', action: window.cancelSoftLock }
@@ -779,62 +973,101 @@
             }
         };
 
+        // --- Find My Car ---
         window.updateFindCar = function() {
             const c = document.getElementById('findcar-content');
             if(window.parkedCar) {
                 c.innerHTML = `
-                    <div class="bg-emeraldLight/10 border border-emeraldLight rounded-2xl p-6 text-center">
-                        <i class="fa-solid fa-car-on text-5xl text-emeraldLight mb-4"></i>
-                        <p class="text-sm text-gray-400">รถของคุณจอดอยู่ที่</p>
-                        <h1 class="text-5xl font-black text-white my-2">${window.parkedCar.floor}-${window.parkedCar.slot}</h1>
-                        <p class="text-xs text-gray-400 mt-4">บันทึกอัตโนมัติโดย AI Sensor</p>
+                    <div class="bg-gradient-to-br from-emeraldLight/20 to-teal-900/40 border border-emeraldLight/50 rounded-3xl p-8 text-center shadow-lg">
+                        <div class="w-24 h-24 bg-emeraldLight/20 rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-emeraldLight/30">
+                            <i class="fa-solid fa-car-on text-5xl text-emeraldLight"></i>
+                        </div>
+                        <p class="text-sm text-gray-300">รถของคุณจอดอยู่ที่</p>
+                        <h1 class="text-7xl font-black text-white my-3 drop-shadow-md">${window.parkedCar.floor}-${window.parkedCar.slot}</h1>
+                        <p class="text-xs text-emeraldLight font-bold bg-emeraldLight/10 inline-block px-4 py-1.5 rounded-full"><i class="fa-solid fa-microchip mr-1"></i> บันทึกอัตโนมัติโดย AI Sensor</p>
                     </div>
+                    <button onclick="nav('receipt')" class="w-full bg-white text-black font-bold py-4 rounded-xl mt-6 transition active:scale-95 shadow-lg">ชำระเงินและนำรถออก</button>
                 `;
             } else {
                 c.innerHTML = `
-                    <div class="bg-cardbg border border-cardborder rounded-2xl p-6 text-center">
-                        <i class="fa-solid fa-circle-question text-4xl text-gray-500 mb-4"></i>
-                        <p class="text-gray-400">ไม่พบข้อมูลการจอดรถในขณะนี้</p>
+                    <div class="bg-cardbg border border-cardborder rounded-3xl p-8 text-center mt-10">
+                        <i class="fa-solid fa-circle-question text-6xl text-gray-600 mb-4"></i>
+                        <h3 class="text-lg font-bold text-white mb-2">ไม่พบข้อมูลการจอดรถ</h3>
+                        <p class="text-sm text-gray-400">คุณยังไม่ได้นำรถเข้าจอดในระบบ</p>
                     </div>
                 `;
             }
         };
 
+        // --- Receipt & Payment ---
         window.updateReceipt = function() {
             const c = document.getElementById('receipt-content');
             if(!window.parkedCar) {
-                c.innerHTML = '<p class="text-center text-gray-500 my-10">ยังไม่มีประวัติการจอดรถ</p>';
+                c.innerHTML = `
+                    <div class="text-center py-10">
+                        <i class="fa-solid fa-receipt text-6xl text-gray-300 mb-4"></i>
+                        <h3 class="text-lg font-bold text-gray-700">ไม่มีบิลค้างชำระ</h3>
+                    </div>
+                `;
                 return;
             }
 
+            // จำลองว่าจอดไป 2 ชั่วโมงครึ่ง
             const mockHours = 2.5; 
-            const freeHours = 2;
+            const freeHours = 2; // สิทธิ์จอดฟรี 2 ชั่วโมงแรก
             let fee = 0;
             if(mockHours > freeHours) {
                 let extraMins = (mockHours - freeHours) * 60;
-                fee = Math.ceil(extraMins / 30) * 20; 
+                fee = Math.ceil(extraMins / 30) * 20; // 30 นาที 20 บาท
             }
 
             c.innerHTML = `
-                <div class="border-b-2 border-dashed border-gray-300 pb-4 mb-4">
-                    <h3 class="font-bold text-lg text-center mb-1">SmartPark Phetchaburi</h3>
-                    <p class="text-xs text-center text-gray-500">ใบเสร็จรับเงิน / Tax Invoice</p>
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-gray-200 rounded-full opacity-50"></div>
+                <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-gray-200 rounded-full opacity-50"></div>
+                
+                <div class="relative z-10">
+                    <div class="border-b-2 border-dashed border-gray-300 pb-4 mb-4 text-center">
+                        <div class="w-12 h-12 bg-black text-white rounded-full flex items-center justify-center mx-auto mb-2 text-xl shadow-md"><i class="fa-solid fa-car"></i></div>
+                        <h3 class="font-bold text-lg">SmartPark Phetchaburi</h3>
+                        <p class="text-[10px] text-gray-500 uppercase tracking-widest">Tax Invoice / E-Receipt</p>
+                    </div>
+                    
+                    <div class="space-y-3 text-sm text-gray-700 mb-6">
+                        <div class="flex justify-between items-center"><span class="text-gray-500">ทะเบียนรถ:</span><span class="font-black text-base bg-gray-200 px-2 py-1 rounded">${window.user.plate}</span></div>
+                        <div class="flex justify-between items-center"><span class="text-gray-500">ตำแหน่งจอด:</span><span class="font-bold">${window.parkedCar.floor}-${window.parkedCar.slot}</span></div>
+                        <div class="flex justify-between items-center"><span class="text-gray-500">เวลาจอดรวม:</span><span class="font-bold">2 ชม. 30 นาที</span></div>
+                        <div class="flex justify-between items-center text-emerald-600 font-bold bg-emerald-50 p-2 rounded-lg"><span class="flex items-center"><i class="fa-solid fa-tag mr-1"></i> สิทธิ์จอดฟรี:</span><span>2 ชั่วโมง</span></div>
+                    </div>
+
+                    <div class="bg-blue-50 border border-blue-100 p-4 rounded-xl mb-6">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm font-bold text-blue-900"><i class="fa-solid fa-coins text-accentGold mr-1"></i> ใช้แต้มส่วนลด</span>
+                            <span class="text-[10px] text-blue-700 bg-blue-200 px-2 py-0.5 rounded-full">มี ${window.user.points} แต้ม</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <input type="number" id="use-points" max="${window.user.points}" value="0" class="flex-1 bg-white border border-blue-200 rounded-lg p-2 text-right font-bold outline-none focus:border-blue-400" oninput="window.calcTotal(${fee})">
+                            <button onclick="document.getElementById('use-points').value=${window.user.points}; window.calcTotal(${fee})" class="bg-blue-600 text-white text-xs font-bold px-3 rounded-lg hover:bg-blue-700">ใช้ทั้งหมด</button>
+                        </div>
+                        <p class="text-[10px] text-blue-600 mt-1">100 แต้ม = ลด 1 บาท</p>
+                    </div>
+
+                    <div class="border-t-2 border-gray-800 pt-4 flex justify-between items-end mb-8">
+                        <span class="font-bold text-gray-500">ยอดชำระสุทธิ:</span>
+                        <span class="text-4xl font-black text-black tracking-tighter" id="final-fee">฿${fee}</span>
+                    </div>
+
+                    <p class="text-center text-xs text-gray-400 mb-2">กรุณาเลือกช่องทางชำระเงิน</p>
+                    <div class="flex gap-3">
+                        <button onclick="window.payReceipt('qr')" class="flex-1 bg-[#003D7A] text-white font-bold py-3 rounded-xl flex flex-col items-center gap-1 transition active:scale-95 shadow-md">
+                            <i class="fa-solid fa-qrcode text-xl"></i>
+                            <span class="text-[10px]">สแกนจ่าย</span>
+                        </button>
+                        <button onclick="window.payReceipt('card')" class="flex-1 bg-black text-white font-bold py-3 rounded-xl flex flex-col items-center gap-1 transition active:scale-95 shadow-md">
+                            <i class="fa-brands fa-cc-visa text-xl"></i>
+                            <span class="text-[10px]">บัตรเครดิต</span>
+                        </button>
+                    </div>
                 </div>
-                <div class="space-y-2 text-sm text-gray-700">
-                    <div class="flex justify-between"><span>ทะเบียนรถ:</span><span class="font-bold">${window.user.plate}</span></div>
-                    <div class="flex justify-between"><span>ตำแหน่ง:</span><span class="font-bold">${window.parkedCar.floor}-${window.parkedCar.slot}</span></div>
-                    <div class="flex justify-between"><span>เวลาจอดรวม:</span><span class="font-bold">2 ชม. 30 นาที</span></div>
-                    <div class="flex justify-between text-emerald-600"><span>สิทธิ์จอดฟรี:</span><span>2 ชั่วโมง</span></div>
-                </div>
-                <div class="bg-gray-100 p-3 rounded-lg my-4 flex justify-between items-center text-sm">
-                    <span class="text-gray-600">ใช้แต้มส่วนลด (มี ${window.user.points})</span>
-                    <input type="number" id="use-points" max="${window.user.points}" value="0" class="w-16 border rounded p-1 text-right outline-none" oninput="window.calcTotal(${fee})">
-                </div>
-                <div class="border-t border-gray-200 pt-4 flex justify-between items-end">
-                    <span class="font-bold">ยอดสุทธิ:</span>
-                    <span class="text-3xl font-black text-crimson" id="final-fee">฿${fee}</span>
-                </div>
-                <button onclick="window.payReceipt()" class="w-full bg-black text-white font-bold py-3 rounded-xl mt-6">ชำระเงินและนำรถออก</button>
             `;
             window.currentFee = fee;
         };
@@ -848,27 +1081,27 @@
             window.pointsToDeduct = p;
         };
 
-        window.payReceipt = async function() {
-            window.showModal({ title: 'กำลังดำเนินการ...', msg: 'กำลังประมวลผลการชำระเงิน', type: 'loading', buttons: [] });
+        window.payReceipt = async function(method) {
+            window.showModal({ title: 'กำลังดำเนินการ...', msg: 'กำลังสร้างรายการชำระเงิน', type: 'loading', buttons: [] });
             
-            if(window.pointsToDeduct) {
-                window.user.points -= window.pointsToDeduct;
-                if(auth.currentUser) {
-                    await setDoc(doc(db, "users", auth.currentUser.uid), { points: window.user.points }, { merge: true });
+            setTimeout(async () => {
+                if(window.pointsToDeduct) {
+                    window.user.points -= window.pointsToDeduct;
+                    if(auth.currentUser) {
+                        await setDoc(doc(db, "users", auth.currentUser.uid), { points: window.user.points }, { merge: true });
+                    }
                 }
-            }
-            
-            window.parkedCar = null;
-            window.updateDI();
-            
-            setTimeout(() => {
+                
+                window.parkedCar = null;
+                window.updateDI();
+                
                 window.showModal({
                     title: 'ชำระเงินสำเร็จ',
                     msg: 'ขอบคุณที่ใช้บริการ SmartPark<br>ไม้กั้นจะเปิดอัตโนมัติเมื่อรถของคุณขับไปถึงทางออก',
                     type: 'success',
                     buttons: [{ text: 'กลับหน้าหลัก', class: 'bg-emeraldLight text-black w-full', action: () => window.nav('home') }]
                 });
-            }, 1500);
+            }, 2000);
         };
     </script>
 </body>
