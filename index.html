@@ -69,7 +69,8 @@
         /* Screens and Scrolling Fixes */
         .app-screen { 
             display: none; 
-            height: 100%; 
+            position: absolute; /* ล็อคหน้าจอให้อยู่ในกรอบ 100% เสมอเพื่อบังคับให้เกิดการ Scroll */
+            top: 0; left: 0; width: 100%; height: 100%;
             flex-direction: column; 
             overflow-y: auto; 
             overflow-x: hidden; 
