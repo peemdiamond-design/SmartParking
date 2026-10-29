@@ -109,9 +109,6 @@
         .slot.locked { background: rgba(249,115,22,0.1); border: 1px solid #f97316; color: #f97316; cursor: not-allowed; }
         .slot.mine { background: rgba(251,191,36,0.2); border: 2px solid #fbbf24; color: #fbbf24; box-shadow: 0 0 10px rgba(251,191,36,0.3); }
 
-        /* GPS Animation */
-        .gps-path { stroke-dasharray: 10; animation: dash 1s linear infinite; }
-        @keyframes dash { to { stroke-dashoffset: -20; } }
     </style>
 </head>
 <body>
@@ -420,18 +417,55 @@
                     </div>
                 </div>
 
-                <!-- GPS Map Visual (Animated Road) -->
-                <div class="w-full h-28 bg-[#111] rounded-2xl border border-gray-800 mb-6 relative overflow-hidden shadow-inner">
-                    <!-- ถนน -->
-                    <div class="absolute top-1/2 left-0 w-full h-12 bg-gray-900 -translate-y-1/2 border-y border-gray-700 flex items-center">
-                        <div class="w-full border-t-2 border-dashed border-gray-500 opacity-50"></div>
+                <!-- Advanced Indoor GPS -->
+                <div class="w-full h-48 bg-[#0a0a0c] rounded-3xl border border-gray-800 mb-6 relative overflow-hidden shadow-2xl">
+                    <!-- Grid Background -->
+                    <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle at 2px 2px, #555 1px, transparent 0); background-size: 20px 20px;"></div>
+                    
+                    <!-- Turn-by-Turn Card -->
+                    <div class="absolute top-3 left-3 z-20 bg-black/80 backdrop-blur-md px-3 py-2 rounded-xl border border-gray-700 flex items-center gap-3 shadow-lg">
+                        <div class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center">
+                            <i id="nav-dir-icon" class="fa-solid fa-arrow-up text-emeraldLight text-lg"></i>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-gray-400" id="nav-instruction">ขับตรงไปตามทาง</div>
+                            <div class="text-sm font-bold text-white"><span id="nav-distance">300</span> เมตร</div>
+                        </div>
                     </div>
-                    <div class="absolute top-1/2 left-2 -translate-y-1/2 text-[10px] font-bold text-gray-400 bg-black px-2 py-1 rounded">ทางเข้า</div>
-                    <div class="absolute top-1/2 right-2 -translate-y-1/2 w-12 h-14 bg-crimson/20 border-2 border-crimson rounded text-crimson flex items-center justify-center text-xs font-bold">A4</div>
-                    <div id="gps-car" class="absolute top-1/2 left-[10%] -translate-y-1/2 text-emeraldLight text-3xl transition-all duration-1000" style="filter: drop-shadow(0 0 5px rgba(16,185,129,0.5));">
-                        <i class="fa-solid fa-car-side"></i>
+                    
+                    <!-- Floor / Road -->
+                    <div class="absolute bottom-4 left-0 w-full h-16 bg-[#1a1a20] border-y-2 border-gray-700">
+                        <div class="absolute top-1/2 left-0 w-full border-t-2 border-dashed border-gray-500 opacity-40"></div>
                     </div>
-                    <div class="absolute bg-black/60 backdrop-blur px-3 py-1 rounded-full text-[10px] text-emeraldLight border border-emeraldLight/30 bottom-1 right-1/2 translate-x-1/2 z-10">Indoor GPS Active</div>
+                    
+                    <!-- Target Parking Bay -->
+                    <div class="absolute bottom-20 right-[15%] w-16 h-20 border-x-2 border-t-2 border-crimson rounded-t-lg bg-crimson/10 shadow-[0_0_20px_rgba(225,29,72,0.4)] flex flex-col justify-center items-center z-10">
+                        <span class="text-[10px] text-crimson font-bold mb-1 shadow-black drop-shadow-md">เป้าหมาย</span>
+                        <span class="text-xl font-black text-white shadow-black drop-shadow-md" id="gps-target-slot">A4</span>
+                    </div>
+                    <!-- Other Parking Bays -->
+                    <div class="absolute bottom-20 right-[45%] w-16 h-20 border-x-2 border-t-2 border-gray-600 rounded-t-lg bg-gray-800/50 flex justify-center items-center z-10">
+                        <i class="fa-solid fa-car text-2xl text-gray-600"></i>
+                    </div>
+                    <div class="absolute bottom-20 right-[75%] w-16 h-20 border-x-2 border-t-2 border-gray-600 rounded-t-lg bg-gray-800/50 flex justify-center items-center z-10">
+                    </div>
+
+                    <!-- Animated Car -->
+                    <div id="gps-car-wrapper" class="absolute bottom-[30px] left-[10%] -translate-x-1/2 transition-all duration-1000 ease-linear z-30 flex items-center justify-center">
+                        <!-- Radar Ripple -->
+                        <div class="absolute w-16 h-16 bg-emeraldLight rounded-full opacity-20 animate-ping"></div>
+                        <!-- Top-down Car SVG -->
+                        <div id="gps-car-rotator" class="transition-all duration-1000 rotate-90">
+                            <svg viewBox="0 0 100 100" class="w-12 h-12 drop-shadow-[0_0_10px_rgba(16,185,129,0.8)]">
+                                <rect x="25" y="15" width="50" height="70" rx="12" fill="#10b981" />
+                                <path d="M 30 35 L 70 35 L 65 55 L 35 55 Z" fill="#000" opacity="0.5" />
+                                <rect x="30" y="15" width="10" height="6" rx="2" fill="#fff" opacity="0.9" />
+                                <rect x="60" y="15" width="10" height="6" rx="2" fill="#fff" opacity="0.9" />
+                                <rect x="30" y="79" width="10" height="4" rx="1" fill="#ef4444" />
+                                <rect x="60" y="79" width="10" height="4" rx="1" fill="#ef4444" />
+                            </svg>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="flex gap-3 mb-6">
@@ -981,13 +1015,46 @@
             document.getElementById('active-timer').innerText = str;
             document.getElementById('time-progress').style.width = `${(window.activeBooking.time / 300) * 100}%`;
             
-            const car = document.getElementById('gps-car');
-            const targetSlot = document.querySelector('#screen-booking-active .absolute.right-2');
-            if(car && targetSlot) {
-                targetSlot.innerText = window.activeBooking.slot;
+            // Advanced GPS Animation
+            const carWrapper = document.getElementById('gps-car-wrapper');
+            const carRotator = document.getElementById('gps-car-rotator');
+            const targetSlotGPS = document.getElementById('gps-target-slot');
+            const navDist = document.getElementById('nav-distance');
+            const navInst = document.getElementById('nav-instruction');
+            const navIcon = document.getElementById('nav-dir-icon');
+
+            if(carWrapper && targetSlotGPS) {
+                targetSlotGPS.innerText = window.activeBooking.slot;
                 let timeElapsed = 300 - window.activeBooking.time;
-                let percent = 10 + ((timeElapsed / 300) * 70); 
-                car.style.left = `${Math.min(percent, 80)}%`;
+                
+                // คำนวณระยะทางถอยหลัง (เริ่มที่ 300m จบที่ 0m)
+                let distance = Math.max(0, Math.floor(((window.activeBooking.time) / 300) * 300));
+                navDist.innerText = distance;
+                
+                if(window.activeBooking.time > 45) {
+                    // Phase 1: ขับตรงไปบนถนน (เวลามากกว่า 45 วินาที)
+                    let percent = 10 + ((timeElapsed / 255) * 75); // ขยับรถจากซ้าย (10%) ไปถึงหน้าช่องจอด (85%)
+                    carWrapper.style.left = `${Math.min(percent, 85)}%`;
+                    carWrapper.style.bottom = `30px`; // อยู่กลางเลนถนน
+                    carRotator.style.transform = 'rotate(90deg)'; // หันหัวรถตรงไปด้านขวา
+                    
+                    navInst.innerText = 'ขับตรงไปตามทาง';
+                    navIcon.className = 'fa-solid fa-arrow-up text-emeraldLight text-lg';
+                } else {
+                    // Phase 2: เลี้ยวเข้าช่องจอด (45 วินาทีสุดท้าย)
+                    carWrapper.style.left = `85%`; // ล็อคตำแหน่งรถไว้ที่หน้าซองจอด
+                    
+                    let parkPercent = (45 - window.activeBooking.time) / 45; // คำนวณ % การเข้าซองจอด (0 ถึง 1)
+                    let bottomPx = 30 + (parkPercent * 60); // ดันรถขึ้นไปด้านบน (เข้าซอง)
+                    carWrapper.style.bottom = `${bottomPx}px`;
+                    
+                    // ค่อยๆ หมุนหัวรถตั้งตรง (จาก 90 องศา เป็น 0 องศา)
+                    let rotation = 90 - (parkPercent * 90); 
+                    carRotator.style.transform = `rotate(${Math.max(0, rotation)}deg)`;
+                    
+                    navInst.innerText = 'เลี้ยวเข้าช่องจอดเป้าหมาย';
+                    navIcon.className = 'fa-solid fa-arrow-turn-right text-warningOrange text-lg';
+                }
             }
         };
 
