@@ -211,8 +211,13 @@
                     <label class="text-xs text-gray-500 block mb-1">สาขาที่เข้าใช้บริการ</label>
                     <div class="relative">
                         <select id="branch-selector" onchange="changeBranch()" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white font-bold outline-none appearance-none">
-                            <option value="phetchaburi">🏢 SmartPark เพชรบุรี (฿20/ชม.)</option>
-                            <option value="asoke">🏢 SmartPark อโศก (฿30/ชม.)</option>
+                            <option value="siam_paragon">🏢 Siam Paragon (฿50/ชม. ฟรี 2 ชม.)</option>
+                            <option value="central_world">🏢 CentralWorld (฿50/ชม. ฟรี 2 ชม.)</option>
+                            <option value="iconsiam">🏢 ICONSIAM (฿50/ชม. ฟรี 2 ชม.)</option>
+                            <option value="emquartier">🏢 EmQuartier (฿50/ชม. ฟรี 2 ชม.)</option>
+                            <option value="terminal21">🏢 Terminal 21 Asok (฿40/ชม. ฟรี 3 ชม.)</option>
+                            <option value="central_ladprao">🏢 Central Ladprao (฿50/ชม. ฟรี 1 ชม.)</option>
+                            <option value="mega_bangna">🏢 Mega Bangna (฿20/ชม. ฟรี 6 ชม.)</option>
                         </select>
                         <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"></i>
                     </div>
@@ -519,10 +524,15 @@
         
         // --- New Enterprise Features State ---
         window.branches = {
-            phetchaburi: { name: 'SmartPark เพชรบุรี', rate: 20, freeHours: 2 },
-            asoke: { name: 'SmartPark อโศก', rate: 30, freeHours: 1 }
+            siam_paragon: { name: 'SmartPark @ Siam Paragon', rate: 50, freeHours: 2 },
+            central_world: { name: 'SmartPark @ CentralWorld', rate: 50, freeHours: 2 },
+            iconsiam: { name: 'SmartPark @ ICONSIAM', rate: 50, freeHours: 2 },
+            emquartier: { name: 'SmartPark @ EmQuartier', rate: 50, freeHours: 2 },
+            terminal21: { name: 'SmartPark @ Terminal 21 Asok', rate: 40, freeHours: 3 },
+            central_ladprao: { name: 'SmartPark @ Central Ladprao', rate: 50, freeHours: 1 },
+            mega_bangna: { name: 'SmartPark @ Mega Bangna', rate: 20, freeHours: 6 }
         };
-        window.currentBranch = 'phetchaburi';
+        window.currentBranch = 'siam_paragon';
         window.hasEStamp = false;
         window.evFilter = false;
 
