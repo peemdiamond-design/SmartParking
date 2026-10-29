@@ -190,7 +190,7 @@
             <!-- SCREEN: HOME -->
             <div id="screen-home" class="app-screen px-6 pt-10">
                 <!-- Top Bar -->
-                <div class="flex justify-between items-center mb-8">
+                <div class="flex justify-between items-center mb-6">
                     <div class="flex items-center gap-3">
                         <div class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center border-2 border-crimson text-gray-300">
                             <i class="fa-solid fa-user"></i>
@@ -203,6 +203,18 @@
                     <div class="bg-cardbg border border-cardborder px-4 py-2 rounded-xl text-center shadow-lg cursor-pointer">
                         <p class="text-[10px] text-gray-400">แต้มสะสม</p>
                         <p class="text-sm font-bold text-accentGold" id="home-points">100</p>
+                    </div>
+                </div>
+
+                <!-- Branch Selector (Multi-Branch) -->
+                <div class="mb-6">
+                    <label class="text-xs text-gray-500 block mb-1">สาขาที่เข้าใช้บริการ</label>
+                    <div class="relative">
+                        <select id="branch-selector" onchange="changeBranch()" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white font-bold outline-none appearance-none">
+                            <option value="phetchaburi">🏢 SmartPark เพชรบุรี (฿20/ชม.)</option>
+                            <option value="asoke">🏢 SmartPark อโศก (฿30/ชม.)</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"></i>
                     </div>
                 </div>
 
@@ -234,13 +246,21 @@
 
                 <h3 class="text-sm font-bold text-gray-400 mb-3">บริการด่วน (Quick Actions)</h3>
                 <div class="grid grid-cols-2 gap-4 mb-6">
-                    <div onclick="nav('findcar')" class="bg-cardbg border border-cardborder p-5 rounded-2xl flex flex-col items-center justify-center gap-3 cursor-pointer active:scale-95 transition shadow-lg">
-                        <div class="w-12 h-12 rounded-full bg-emeraldLight/20 text-emeraldLight flex items-center justify-center text-xl"><i class="fa-solid fa-location-crosshairs"></i></div>
-                        <span class="text-sm font-bold text-white">หาตำแหน่งรถ</span>
+                    <div onclick="nav('findcar')" class="bg-cardbg border border-cardborder p-4 rounded-2xl flex flex-col items-center justify-center gap-2 cursor-pointer active:scale-95 transition shadow-lg">
+                        <div class="w-10 h-10 rounded-full bg-emeraldLight/20 text-emeraldLight flex items-center justify-center text-lg"><i class="fa-solid fa-location-crosshairs"></i></div>
+                        <span class="text-xs font-bold text-white">หาตำแหน่งรถ</span>
                     </div>
-                    <div onclick="nav('receipt')" class="bg-cardbg border border-cardborder p-5 rounded-2xl flex flex-col items-center justify-center gap-3 cursor-pointer active:scale-95 transition shadow-lg">
-                        <div class="w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-xl"><i class="fa-solid fa-receipt"></i></div>
-                        <span class="text-sm font-bold text-white">ชำระค่าบริการ</span>
+                    <div onclick="requestValet()" class="bg-cardbg border border-cardborder p-4 rounded-2xl flex flex-col items-center justify-center gap-2 cursor-pointer active:scale-95 transition shadow-lg">
+                        <div class="w-10 h-10 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center text-lg"><i class="fa-solid fa-bell-concierge"></i></div>
+                        <span class="text-xs font-bold text-white">เรียก Valet</span>
+                    </div>
+                    <div onclick="scanEStamp()" class="bg-cardbg border border-cardborder p-4 rounded-2xl flex flex-col items-center justify-center gap-2 cursor-pointer active:scale-95 transition shadow-lg">
+                        <div class="w-10 h-10 rounded-full bg-orange-500/20 text-orange-400 flex items-center justify-center text-lg"><i class="fa-solid fa-qrcode"></i></div>
+                        <span class="text-xs font-bold text-white">สแกน E-Stamp</span>
+                    </div>
+                    <div onclick="nav('receipt')" class="bg-cardbg border border-cardborder p-4 rounded-2xl flex flex-col items-center justify-center gap-2 cursor-pointer active:scale-95 transition shadow-lg">
+                        <div class="w-10 h-10 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-lg"><i class="fa-solid fa-receipt"></i></div>
+                        <span class="text-xs font-bold text-white">ชำระค่าบริการ</span>
                     </div>
                 </div>
             </div>
@@ -323,11 +343,16 @@
 
             <!-- SCREEN: FLOOR (GRID) -->
             <div id="screen-floor" class="app-screen px-4 pt-10">
-                <div class="flex items-center gap-4 mb-6">
+                <div class="flex items-center gap-4 mb-4">
                     <button onclick="nav('parking')" class="w-10 h-10 bg-cardbg rounded-full flex justify-center items-center"><i class="fa-solid fa-arrow-left"></i></button>
                     <h2 class="text-xl font-bold text-white" id="floor-title">ชั้น P2</h2>
                 </div>
                 
+                <div class="flex items-center gap-2 mb-4 bg-gray-900 border border-gray-700 p-2 rounded-xl">
+                    <input type="checkbox" id="ev-filter" onchange="toggleEV()" class="w-4 h-4 accent-blue-500 rounded">
+                    <label for="ev-filter" class="text-xs text-gray-300 font-bold"><i class="fa-solid fa-bolt text-blue-400"></i> แสดงเฉพาะช่องจอดรถยนต์ไฟฟ้า (EV)</label>
+                </div>
+
                 <div class="flex justify-between items-center mb-6 text-xs px-2">
                     <div class="flex items-center gap-1"><div class="w-3 h-3 bg-emeraldLight/20 border border-emeraldLight rounded"></div><span class="text-gray-400">ว่าง</span></div>
                     <div class="flex items-center gap-1"><div class="w-3 h-3 bg-crimson/20 border border-crimson rounded"></div><span class="text-gray-400">ไม่ว่าง</span></div>
@@ -491,6 +516,15 @@
         window.timerInterval = null;
         window.isRegistering = false; 
         window.simulatedExtraTimeMs = 0; // เพิ่มตัวแปรสำหรับจำลองเวลาจอด
+        
+        // --- New Enterprise Features State ---
+        window.branches = {
+            phetchaburi: { name: 'SmartPark เพชรบุรี', rate: 20, freeHours: 2 },
+            asoke: { name: 'SmartPark อโศก', rate: 30, freeHours: 1 }
+        };
+        window.currentBranch = 'phetchaburi';
+        window.hasEStamp = false;
+        window.evFilter = false;
 
         // --- Firebase Auth Observer ---
         onAuthStateChanged(auth, async (fbUser) => {
@@ -654,6 +688,63 @@
             });
         };
 
+        // --- Enterprise Features Methods ---
+        window.changeBranch = function() {
+            window.currentBranch = document.getElementById('branch-selector').value;
+        };
+
+        window.toggleEV = function() {
+            window.evFilter = document.getElementById('ev-filter').checked;
+            window.renderGrid();
+        };
+
+        window.requestValet = function() {
+            if(window.activeBooking || window.parkedCar) {
+                window.showModal({ title: 'ไม่สามารถดำเนินการได้', msg: 'คุณมีรายการจองหรือจอดรถอยู่แล้ว', type: 'warn' });
+                return;
+            }
+            window.showModal({
+                title: 'บริการ Valet Parking 🎩',
+                msg: 'พนักงานกำลังไปรับรถของคุณที่จุด Drop-off<br><span class="text-xs text-purple-400">* มีค่าบริการรับรถ 100 บาท (เพิ่มลงในบิล)</span>',
+                buttons: [
+                    { text: 'ยกเลิก', class: 'bg-cardborder text-white', action: () => {} },
+                    { text: 'ยืนยันเรียก Valet', class: 'bg-purple-600 text-white', action: () => {
+                        window.parkedCar = { floor: 'VIP', slot: 'Valet', startTime: new Date(), plate: window.user.plate, isValet: true };
+                        window.updateHome();
+                        window.showModal({ 
+                            title: 'รับรถเรียบร้อย', 
+                            msg: 'พนักงาน Valet รับรถของคุณแล้ว<br>สามารถตรวจสอบสถานะได้ที่เมนู "ตำแหน่งรถ"', 
+                            type: 'success', 
+                            buttons: [{ text: 'ตกลง', class: 'bg-emeraldLight text-black w-full', action: () => window.nav('findcar') }] 
+                        });
+                    }}
+                ]
+            });
+        };
+
+        window.scanEStamp = function() {
+            if(!window.parkedCar) {
+                window.showModal({ title: 'ไม่มีข้อมูลจอดรถ', msg: 'คุณต้องนำรถเข้าจอดหรือใช้บริการ Valet ก่อนถึงจะสแกนใบเสร็จห้างได้', type: 'warn' });
+                return;
+            }
+            if(window.hasEStamp) {
+                window.showModal({ title: 'สแกนแล้ว', msg: 'คุณได้รับสิทธิ์จอดฟรี +2 ชั่วโมงจาก E-Stamp ไปแล้ว', type: 'info' });
+                return;
+            }
+            window.showModal({ title: 'กำลังสแกน E-Stamp...', msg: 'จำลองการเปิดกล้องสแกน QR Code ท้ายใบเสร็จห้าง...', type: 'loading', buttons: [] });
+            setTimeout(() => {
+                window.hasEStamp = true;
+                window.showModal({ 
+                    title: 'สแกนสำเร็จ!', 
+                    msg: 'คุณได้รับสิทธิ์จอดฟรีเพิ่ม 2 ชั่วโมงเรียบร้อยแล้ว ยอดนี้จะถูกหักลบในบิลค่าที่จอดรถของคุณ', 
+                    type: 'success', 
+                    buttons: [{ text: 'ตกลง', class: 'bg-emeraldLight text-black w-full', action: () => {
+                        if(document.getElementById('screen-receipt').classList.contains('active')) window.updateReceipt();
+                    }}] 
+                });
+            }, 1500);
+        };
+
         // --- Views Updates ---
         window.updateHome = function() {
             document.getElementById('home-name').innerText = `คุณ ${window.user.name}`;
@@ -804,33 +895,41 @@
             container.innerHTML = '';
             for(let i=1; i<=20; i++) {
                 let slotName = 'A' + i;
+                let isEV = (i % 4 === 0 && i !== 20); // จำลองว่ามีบางช่องเป็น EV
+                
+                if(window.evFilter && !isEV) continue;
+                
                 let div = document.createElement('div');
-                div.innerText = slotName;
                 
                 let status = 'free';
-                if(i%5===0) status = 'occ';
+                if(i%5===0 && !isEV) status = 'occ';
                 if(i%7===0) status = 'locked';
 
                 if(window.parkedCar && window.parkedCar.floor === window.currentFloor && window.parkedCar.slot === slotName) status = 'mine';
                 if(window.activeBooking && window.activeBooking.floor === window.currentFloor && window.activeBooking.slot === slotName) status = 'locked';
 
-                div.className = `slot ${status}`;
+                div.className = `slot ${status} relative`;
+                let evIcon = isEV ? '<i class="fa-solid fa-bolt text-blue-500 absolute top-1 right-1 text-[10px]"></i>' : '';
                 
                 if(status === 'free') {
-                    div.onclick = () => window.selectSlot(slotName);
+                    div.innerHTML = `${slotName}${evIcon}`;
+                    div.onclick = () => window.selectSlot(slotName, isEV);
                 } else if(status === 'mine') {
-                    div.innerHTML = `<i class="fa-solid fa-car text-xl mb-1"></i>${slotName}`;
+                    div.innerHTML = `<i class="fa-solid fa-car text-xl mb-1"></i>${slotName}${evIcon}`;
+                } else {
+                    div.innerHTML = `${slotName}${evIcon}`;
                 }
                 container.appendChild(div);
             }
         };
 
-        window.selectSlot = function(slotName) {
+        window.selectSlot = function(slotName, isEV) {
             if(window.activeBooking || window.parkedCar) {
                 window.showModal({ title: 'ไม่สามารถดำเนินการได้', msg: 'คุณมีรายการจองหรือจอดรถอยู่แล้ว', type: 'warn' });
                 return;
             }
             document.getElementById('detail-slot-name').innerText = slotName;
+            window.currentSlotIsEV = isEV; // บันทึกไว้เพื่อส่งไปตอนกดล็อค
             
             // โหลดรายการทะเบียนรถให้เลือก
             const select = document.getElementById('booking-plate-select');
@@ -843,7 +942,7 @@
         window.startSoftLock = function() {
             const slotName = document.getElementById('detail-slot-name').innerText;
             const selectedPlate = document.getElementById('booking-plate-select').value;
-            window.activeBooking = { floor: window.currentFloor, slot: slotName, time: 300, plate: selectedPlate };
+            window.activeBooking = { floor: window.currentFloor, slot: slotName, time: 300, plate: selectedPlate, isEV: window.currentSlotIsEV };
             
             window.showModal({
                 title: 'ล็อคช่องจอดสำเร็จ',
@@ -928,7 +1027,7 @@
             // เช็คว่าทะเบียนตรงกับที่เลือกตอนจองหรือไม่
             if(detectedPlate === (window.activeBooking.plate || window.user.plate)) {
                 clearInterval(window.timerInterval);
-                window.parkedCar = { floor: window.activeBooking.floor, slot: window.activeBooking.slot, startTime: new Date(), plate: detectedPlate };
+                window.parkedCar = { floor: window.activeBooking.floor, slot: window.activeBooking.slot, startTime: new Date(), plate: detectedPlate, isEV: window.activeBooking.isEV };
                 window.activeBooking = null;
                 window.user.points += 50;
                 
@@ -953,17 +1052,45 @@
         window.updateFindCar = function() {
             const c = document.getElementById('findcar-content');
             if(window.parkedCar) {
-                c.innerHTML = `
-                    <div class="bg-emeraldLight/10 border border-emeraldLight rounded-3xl p-8 text-center shadow-lg mb-6">
-                        <i class="fa-solid fa-car-on text-6xl text-emeraldLight mb-6"></i>
-                        <p class="text-sm text-gray-400">รถของคุณจอดอยู่ที่</p>
-                        <h1 class="text-6xl font-black text-white my-3">${window.parkedCar.floor}-${window.parkedCar.slot}</h1>
-                        <p class="text-xs text-gray-400 mt-4">บันทึกอัตโนมัติโดย AI Sensor</p>
-                    </div>
-                    <button onclick="nav('receipt')" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-[0_0_15px_rgba(37,99,235,0.4)] active:scale-95 transition text-lg">
-                        <i class="fa-solid fa-receipt mr-2"></i> ชำระค่าบริการและนำรถออก
-                    </button>
-                `;
+                if(window.parkedCar.isValet) {
+                    c.innerHTML = `
+                        <div class="bg-purple-600/10 border border-purple-500 rounded-3xl p-8 text-center shadow-lg mb-6">
+                            <i class="fa-solid fa-bell-concierge text-6xl text-purple-400 mb-6"></i>
+                            <p class="text-sm text-gray-400">รถของคุณดูแลโดย</p>
+                            <h1 class="text-4xl font-black text-white my-3">พนักงาน Valet</h1>
+                            <p class="text-xs text-gray-400 mt-4">จอดอย่างปลอดภัยในโซน VIP</p>
+                        </div>
+                        <button onclick="nav('receipt')" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-[0_0_15px_rgba(37,99,235,0.4)] active:scale-95 transition text-lg">
+                            <i class="fa-solid fa-receipt mr-2"></i> ชำระเงินและเรียกรถคืน
+                        </button>
+                    `;
+                } else {
+                    let evWidget = '';
+                    if(window.parkedCar.isEV) {
+                        let battery = Math.min(100, 45 + Math.floor((window.simulatedExtraTimeMs||0)/60000/2));
+                        evWidget = `
+                            <div class="mt-6 bg-blue-900/30 border border-blue-500/50 rounded-xl p-4 flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-solid fa-bolt text-blue-400 text-2xl"></i> 
+                                    <div class="text-left"><span class="text-sm font-bold text-white block">กำลังชาร์จ EV</span><span class="text-[10px] text-gray-400">สถานีชาร์จความเร็วสูง</span></div>
+                                </div>
+                                <span class="text-2xl font-black text-blue-300">${battery}%</span>
+                            </div>
+                        `;
+                    }
+                    c.innerHTML = `
+                        <div class="bg-emeraldLight/10 border border-emeraldLight rounded-3xl p-8 text-center shadow-lg mb-6">
+                            <i class="fa-solid fa-car-on text-6xl text-emeraldLight mb-6"></i>
+                            <p class="text-sm text-gray-400">รถของคุณจอดอยู่ที่</p>
+                            <h1 class="text-6xl font-black text-white my-3">${window.parkedCar.floor}-${window.parkedCar.slot}</h1>
+                            <p class="text-xs text-gray-400">บันทึกอัตโนมัติโดย AI Sensor</p>
+                            ${evWidget}
+                        </div>
+                        <button onclick="nav('receipt')" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-[0_0_15px_rgba(37,99,235,0.4)] active:scale-95 transition text-lg">
+                            <i class="fa-solid fa-receipt mr-2"></i> ชำระค่าบริการและนำรถออก
+                        </button>
+                    `;
+                }
             } else {
                 c.innerHTML = `
                     <div class="bg-cardbg border border-cardborder rounded-3xl p-8 text-center shadow-lg">
@@ -981,35 +1108,46 @@
                 return;
             }
 
-            // คำนวณเวลาจอดจริง + เวลาจำลอง (สำหรับทดสอบ)
             const now = new Date();
             const elapsedMs = (now - window.parkedCar.startTime) + (window.simulatedExtraTimeMs || 0);
             let elapsedMins = Math.floor(elapsedMs / 60000);
-            if(elapsedMins < 1) elapsedMins = 1; // แสดงขั้นต่ำ 1 นาที
+            if(elapsedMins < 1) elapsedMins = 1; 
             
             const displayHours = Math.floor(elapsedMins / 60);
             const displayMins = elapsedMins % 60;
             const timeStr = displayHours > 0 ? `${displayHours} ชม. ${displayMins} นาที` : `${displayMins} นาที`;
 
-            // กฎการคิดเงิน: ชั่วโมงละ 20 บาท ปัดเศษขึ้น (เศษของชั่วโมงคิดเป็น 1 ชั่วโมง)
+            const branch = window.branches[window.currentBranch];
+            let baseFreeHours = window.user.type === 'vip' ? 999 : branch.freeHours;
+            let totalFreeHours = baseFreeHours + (window.hasEStamp ? 2 : 0);
+
             let hoursForPricing = Math.ceil(elapsedMins / 60);
-            if(hoursForPricing === 0) hoursForPricing = 1; // ค่าบริการขั้นต่ำ 1 ชั่วโมง
+            if(hoursForPricing === 0) hoursForPricing = 1; 
             
-            let fee = 0;
-            if(window.user.type !== 'vip') {
-                fee = hoursForPricing * 20;
-            }
+            let billableHours = Math.max(0, hoursForPricing - totalFreeHours);
+            let parkingFee = billableHours * branch.rate;
+            let valetFee = window.parkedCar.isValet ? 100 : 0;
+            let evFee = window.parkedCar.isEV ? 50 : 0; 
+            
+            let fee = parkingFee + valetFee + evFee;
+
+            let freeText = window.user.type === 'vip' ? 'VIP (ฟรี)' : `${branch.freeHours} ชั่วโมง`;
+            if(window.hasEStamp && window.user.type !== 'vip') freeText += ' <span class="bg-orange-500 text-white text-[10px] px-1 rounded ml-1">+2 ชม. (E-Stamp)</span>';
 
             c.innerHTML = `
                 <div class="border-b-2 border-dashed border-gray-300 pb-4 mb-4">
-                    <h3 class="font-bold text-lg text-center mb-1">SmartPark Phetchaburi</h3>
+                    <h3 class="font-bold text-lg text-center mb-1">${branch.name}</h3>
                     <p class="text-xs text-center text-gray-500">E-Receipt / Tax Invoice</p>
                 </div>
                 <div class="space-y-3 text-sm text-gray-700">
                     <div class="flex justify-between items-center"><span>ทะเบียนรถ:</span><span class="font-bold bg-gray-200 px-2 py-1 rounded">${window.parkedCar.plate}</span></div>
                     <div class="flex justify-between items-center"><span>ตำแหน่ง:</span><span class="font-bold">${window.parkedCar.floor}-${window.parkedCar.slot}</span></div>
                     <div class="flex justify-between items-center"><span>เวลาจอดรวม:</span><span class="font-bold">${timeStr}</span></div>
-                    <div class="flex justify-between items-center text-emerald-600"><span>สิทธิ์จอดฟรี:</span><span class="font-bold">${window.user.type === 'vip' ? 'สมาชิก VIP (ฟรีตลอดการจอด)' : 'ไม่มี'}</span></div>
+                    <div class="flex justify-between items-center text-emerald-600"><span>สิทธิ์จอดฟรี:</span><span class="font-bold">${freeText}</span></div>
+                    
+                    ${valetFee > 0 ? `<div class="flex justify-between items-center text-purple-600"><span>บริการ Valet:</span><span class="font-bold">฿${valetFee}</span></div>` : ''}
+                    ${evFee > 0 ? `<div class="flex justify-between items-center text-blue-500"><span>ค่าชาร์จ EV (เหมาจ่าย):</span><span class="font-bold">฿${evFee}</span></div>` : ''}
+                    <div class="flex justify-between items-center text-gray-500"><span>ค่าที่จอดรถ (${branch.rate}฿/ชม.):</span><span class="font-bold">฿${parkingFee}</span></div>
                 </div>
                 <div class="bg-gray-100 p-3 rounded-xl my-4 flex justify-between items-center text-sm border border-gray-200">
                     <span class="text-gray-600 font-bold">ใช้แต้มส่วนลด <br><span class="text-xs font-normal">(มี ${window.user.points} แต้ม)</span></span>
@@ -1019,8 +1157,11 @@
                     <span class="font-bold text-lg">ยอดสุทธิ:</span>
                     <span class="text-4xl font-black text-crimson" id="final-fee">฿${fee}</span>
                 </div>
-                <button onclick="window.payReceipt()" class="w-full bg-black text-white font-bold py-4 rounded-xl mt-8 shadow-lg active:scale-95 transition">ชำระเงินและนำรถออก</button>
-                <button onclick="window.addSimTime()" class="w-full bg-transparent border border-gray-300 text-gray-500 font-bold py-2 rounded-xl mt-3 text-xs"><i class="fa-solid fa-forward-step"></i> จำลองเวลาจอดผ่านไป +1 ชั่วโมง</button>
+                <button onclick="window.payReceipt()" class="w-full bg-black text-white font-bold py-4 rounded-xl mt-6 shadow-lg active:scale-95 transition">ชำระเงินและนำรถออก</button>
+                <div class="flex gap-2 mt-3">
+                    <button onclick="window.addSimTime()" class="flex-1 bg-transparent border border-gray-300 text-gray-500 font-bold py-2 rounded-xl text-[10px]"><i class="fa-solid fa-forward-step"></i> +1 ชม.</button>
+                    ${!window.hasEStamp ? `<button onclick="window.scanEStamp()" class="flex-1 bg-orange-100 border border-orange-300 text-orange-600 font-bold py-2 rounded-xl text-[10px]"><i class="fa-solid fa-qrcode"></i> สแกน E-Stamp</button>` : ''}
+                </div>
             `;
             window.currentFee = fee;
         };
@@ -1046,22 +1187,23 @@
                 window.user.points -= window.pointsToDeduct;
             }
             
-            // คำนวณเวลาสรุปเพื่อใส่ในประวัติการจอด
             const elapsedMs = (new Date() - window.parkedCar.startTime) + (window.simulatedExtraTimeMs || 0);
             const elapsedMins = Math.max(1, Math.floor(elapsedMs / 60000));
             const displayHours = Math.floor(elapsedMins / 60);
             const displayMins = elapsedMins % 60;
             const durationStr = displayHours > 0 ? `${displayHours} ชม. ${displayMins} นาที` : `${displayMins} นาที`;
             const historyTimeStr = `วันนี้, ${new Date().getHours().toString().padStart(2,'0')}:${new Date().getMinutes().toString().padStart(2,'0')} น.`;
+            
+            const branchName = window.branches[window.currentBranch].name;
 
-            // บันทึกลงประวัติหน้า History (Real Data)
             if(!window.user.history) window.user.history = [];
             window.user.history.unshift({
                 date: historyTimeStr,
                 duration: durationStr,
                 fee: document.getElementById('final-fee').innerText.replace('฿',''),
                 plate: window.parkedCar.plate,
-                slot: `${window.parkedCar.floor}-${window.parkedCar.slot}`
+                slot: `${window.parkedCar.floor}-${window.parkedCar.slot}`,
+                branch: branchName
             });
 
             if(auth.currentUser) {
@@ -1072,12 +1214,13 @@
             }
 
             window.parkedCar = null;
-            window.simulatedExtraTimeMs = 0; // รีเซ็ตเวลาจำลอง
+            window.simulatedExtraTimeMs = 0; 
+            window.hasEStamp = false; // Reset E-Stamp flag
             
             setTimeout(() => {
                 window.showModal({
                     title: 'ชำระเงินสำเร็จ',
-                    msg: 'ขอบคุณที่ใช้บริการ SmartPark<br>ไม้กั้นจะเปิดอัตโนมัติเมื่อรถของคุณขับไปถึงทางออก',
+                    msg: 'ขอบคุณที่ใช้บริการ<br>ไม้กั้นจะเปิดอัตโนมัติเมื่อรถของคุณขับไปถึงทางออก',
                     type: 'success',
                     buttons: [{ text: 'กลับหน้าหลัก', class: 'bg-emeraldLight text-black w-full', action: () => window.nav('home') }]
                 });
@@ -1095,7 +1238,7 @@
                     <div class="flex items-center gap-4">
                         <div class="w-10 h-10 bg-emeraldLight/20 text-emeraldLight rounded-full flex items-center justify-center"><i class="fa-solid fa-file-invoice-dollar"></i></div>
                         <div>
-                            <h4 class="text-sm font-bold text-white">SmartPark Phetchaburi</h4>
+                            <h4 class="text-sm font-bold text-white">${h.branch || 'SmartPark'}</h4>
                             <p class="text-xs text-gray-400">${h.date} (${h.duration})</p>
                         </div>
                     </div>
@@ -1111,7 +1254,7 @@
             const h = window.user.history[idx];
             window.showModal({
                 title: 'รายละเอียดใบเสร็จ',
-                msg: 'SmartPark Phetchaburi',
+                msg: h.branch || 'SmartPark Phetchaburi',
                 html: `
                     <div class="bg-black border border-gray-700 rounded-xl p-4 text-sm text-gray-300 space-y-3 mt-2 text-left shadow-inner">
                         <div class="flex justify-between items-center"><span class="text-gray-500">วันที่:</span><span class="font-bold text-white">${h.date}</span></div>
