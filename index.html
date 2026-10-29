@@ -75,16 +75,9 @@
             overflow-y: auto; 
             overflow-x: hidden; 
             -webkit-overflow-scrolling: touch; /* Smooth scrolling on mobile */
+            padding-bottom: 140px; /* แก้อาการตกขอบด้วยการเว้นระยะด้านล่างตรงๆ (เสถียรทุกเบราว์เซอร์) */
         }
         
-        /* แก้ปัญหา Flexbox มองข้าม padding-bottom ดันให้เลื่อนได้สุดขอบ ไม่โดนเมนูบัง */
-        .app-screen::after {
-            content: '';
-            display: block;
-            min-height: 140px; /* พื้นที่เว้นเผื่อเมนูด้านล่าง */
-            flex-shrink: 0;
-        }
-
         .app-screen.active { display: flex; animation: fade 0.3s ease; }
         @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
@@ -426,7 +419,7 @@
                         <div class="absolute left-0 top-0 h-full bg-emeraldLight rounded-full transition-all" id="time-progress" style="width: 100%;"></div>
                     </div>
 
-                    <div class="flex justify-center items-end gap-2 mt-2">
+                    <div class="flex justify-center items-end gap-2 mt-2 pb-2">
                         <span class="text-5xl font-mono font-bold text-white leading-none tracking-wider" id="active-timer">05:00</span>
                         <span class="text-sm text-gray-400 mb-1">นาที</span>
                     </div>
@@ -740,7 +733,15 @@
                     { text: 'ยกเลิก', class: 'bg-cardborder text-white', action: () => {} },
                     { text: 'ออกจากระบบ', class: 'bg-crimson text-white', action: () => {
                         signOut(auth).then(() => {
-                            window.user = { name: '', plate: '', phone: '', type: 'normal', points: 0, email: '' };
+                            // เคลียร์ State ให้หมดจด ป้องกันบัคข้อมูลหลุดไปบัญชีอื่น
+                            window.user = { name: '', plate: '', plates: [], phone: '', type: 'normal', points: 0, email: '', history: [] };
+                            window.activeBooking = null; 
+                            window.parkedCar = null; 
+                            window.hasEStamp = false;
+                            window.simulatedExtraTimeMs = 0;
+                            window.evFilter = false;
+                            clearInterval(window.timerInterval);
+                            
                             window.nav('onboarding');
                         });
                     }}
@@ -1322,7 +1323,7 @@
             window.user.history.unshift({
                 date: historyTimeStr,
                 duration: durationStr,
-                fee: document.getElementById('final-fee').innerText.replace('฿',''),
+                fee: window.currentFee, // ดึงยอดเงินจาก State โดยตรงเพื่อความถูกต้องของ Data
                 plate: window.parkedCar.plate,
                 slot: `${window.parkedCar.floor}-${window.parkedCar.slot}`,
                 branch: branchName
