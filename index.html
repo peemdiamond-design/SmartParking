@@ -32,91 +32,62 @@
         }
     </script>
     <style>
-        /* ==========================================
-           1. CORE ARCHITECTURE (รื้อระบบล็อคหน้าจอใหม่) 
-           ========================================== */
         body {
             font-family: 'Kanit', sans-serif;
-            background-color: #000000;
+            background-color: #000000; /* Darker outside background for desktop */
             color: #f8fafc;
             display: flex; justify-content: center; align-items: center;
-            height: 100vh; height: 100dvh; /* ล็อคความสูงหน้าจอหลัก ห้ามขยับหรือยืดเด็ดขาด */
-            margin: 0; padding: 0; overflow: hidden;
-            user-select: none; -webkit-user-select: none;
+            min-height: 100vh; min-height: 100dvh;
+            margin: 0; padding: 0; overflow: hidden; user-select: none; -webkit-user-select: none;
         }
 
-        /* กล่องแอป (เสมือนกรอบมือถือ) */
+        /* App Container (PWA Style) */
         .app-container {
             width: 100%;
-            height: 100%; /* ยึดความสูงตายตัวตาม body */
+            height: 100dvh;
             max-width: 480px;
             background: #050505;
             position: relative;
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* ตัดทุกอย่างที่ทะลุกรอบ */
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
         }
 
+        /* Desktop specific styles for the container */
         @media (min-width: 481px) {
             .app-container {
                 height: 90vh;
-                max-height: 850px;
                 border-radius: 36px;
                 border: 1px solid #1a1a20;
-                box-shadow: 0 0 40px rgba(0,0,0,0.8);
             }
         }
         
-        /* 
-           2. SCREEN & SCROLLING SYSTEM 
-           (ระบบเลื่อนหน้าจอแบบใหม่ การันตีไม่ตกขอบ) 
-        */
-        .app-screen { 
-            display: none; 
-            position: absolute; 
-            inset: 0; /* ขึงหน้าจอให้ตึงติดขอบ 4 ด้าน (top:0, bottom:0, left:0, right:0) */
-            flex-direction: column; 
-            overflow-y: auto; /* อนุญาตให้เลื่อนขึ้นลงได้เฉพาะภายในกรอบนี้เท่านั้น */
-            overflow-x: hidden; 
-            -webkit-overflow-scrolling: touch; /* เลื่อนลื่นๆ บน iOS */
-            /* ลบ padding-bottom ทิ้งทั้งหมด เพราะทำให้ Flexbox เอ๋อ */
-        }
-        
-        .app-screen.active { 
-            display: flex; 
-            animation: fade 0.3s ease; 
-        }
-        
-        @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* 🔥 THE ULTIMATE FIX: ตัวดันขอบล่างล่องหน (Spacer) */
-        .app-screen::after {
-            content: '';
-            display: block;
-            min-height: 130px; /* สร้างก้อนล่องหนสูง 130px ไว้ล่างสุด การันตีว่าเลื่อนพ้นเมนูแน่นอน */
-            width: 100%;
-            flex-shrink: 0; /* กฎเหล็ก: ห้ามเบราว์เซอร์บีบก้อนล่องหนนี้เด็ดขาด */
-        }
-
-        /* ยกเว้นหน้าเข้าสู่ระบบ/สมัคร ที่ไม่มีเมนูด้านล่าง ไม่ต้องใส่ตัวดันขอบ เพื่อให้จัดกึ่งกลางสวยงาม */
-        #screen-onboarding::after, #screen-login::after, #screen-register::after {
-            min-height: 20px;
-        }
-        
-        /* ซ่อน Scrollbar ให้ดูคลีนแบบแอป */
-        .app-screen::-webkit-scrollbar { width: 0px; display: none; }
-        .app-screen { -ms-overflow-style: none; scrollbar-width: none; }
-
-        /* ==========================================
-           3. UI COMPONENTS
-           ========================================== */
         .glass { background: linear-gradient(145deg, rgba(20,20,25,0.9), rgba(10,10,12,0.95)); backdrop-filter: blur(10px); border: 1px solid rgba(225,29,72,0.2); }
         .glow { box-shadow: 0 0 15px rgba(225,29,72,0.3); }
+        
+        /* Screens and Scrolling Fixes */
+        .app-screen { 
+            display: none; 
+            position: absolute; /* ล็อคหน้าจอให้อยู่ในกรอบ 100% เสมอเพื่อบังคับให้เกิดการ Scroll */
+            top: 0; left: 0; width: 100%; height: 100%;
+            flex-direction: column; 
+            overflow-y: auto; 
+            overflow-x: hidden; 
+            padding-bottom: 140px; /* Safe padding for bottom nav */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on mobile */
+        }
+        .app-screen.active { display: flex; animation: fade 0.3s ease; }
+        @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Hide scrollbar for a cleaner app look */
+        .app-screen::-webkit-scrollbar { width: 0px; display: none; }
+        .app-screen { -ms-overflow-style: none; scrollbar-width: none; }
 
         /* Bottom Nav */
         .bottom-nav {
             position: absolute; bottom: 0; left: 0; width: 100%; height: 85px;
-            background: linear-gradient(to top, rgba(5,5,5,1) 75%, rgba(5,5,5,0));
+            background: linear-gradient(to top, rgba(5,5,5,1) 70%, rgba(5,5,5,0));
             z-index: 50; display: none; justify-content: space-around; align-items: center; padding-bottom: 15px;
         }
         .bottom-nav.active { display: flex; }
@@ -313,21 +284,14 @@
                     <div onclick="openFloor('P2')" class="glass p-5 rounded-2xl flex items-center justify-between cursor-pointer shadow-lg active:scale-95 transition">
                         <div class="flex items-center gap-4">
                             <div class="w-12 h-12 bg-gray-800 border border-gray-600 text-white rounded-xl flex justify-center items-center text-lg font-bold">P2</div>
-                            <div><h4 class="text-base font-bold text-white">ชั้นปกติ</h4><p class="text-xs text-emeraldLight">ว่าง 45 ช่อง</p></div>
+                            <div><h4 class="text-base font-bold text-white">ชั้นปกติ (Supermarket)</h4><p class="text-xs text-emeraldLight">ว่าง 45 ช่อง</p></div>
                         </div>
                         <i class="fa-solid fa-chevron-right text-white"></i>
                     </div>
                     <div onclick="openFloor('P3')" class="glass p-5 rounded-2xl flex items-center justify-between cursor-pointer shadow-lg active:scale-95 transition">
                         <div class="flex items-center gap-4">
                             <div class="w-12 h-12 bg-gray-800 border border-gray-600 text-white rounded-xl flex justify-center items-center text-lg font-bold">P3</div>
-                            <div><h4 class="text-base font-bold text-white">ชั้นปกติ</h4><p class="text-xs text-emeraldLight">ว่าง 12 ช่อง</p></div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-white"></i>
-                    </div>
-                    <div onclick="openFloor('P4')" class="glass p-5 rounded-2xl flex items-center justify-between cursor-pointer shadow-lg active:scale-95 transition">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 bg-gray-800 border border-gray-600 text-white rounded-xl flex justify-center items-center text-lg font-bold">P4</div>
-                            <div><h4 class="text-base font-bold text-white">ชั้นปกติ</h4><p class="text-xs text-emeraldLight">ว่าง 20 ช่อง</p></div>
+                            <div><h4 class="text-base font-bold text-white">ชั้นปกติ (Cinema)</h4><p class="text-xs text-emeraldLight">ว่าง 12 ช่อง</p></div>
                         </div>
                         <i class="fa-solid fa-chevron-right text-white"></i>
                     </div>
@@ -438,7 +402,7 @@
             <div id="screen-booking-active" class="app-screen px-6 pt-10">
                 <h2 class="text-xl font-bold text-center text-white mb-6">กำลังนำทางไปยังช่องจอด</h2>
                 
-                <div class="bg-cardbg border border-cardborder rounded-3xl p-6 pb-8 text-center relative overflow-hidden mb-6">
+                <div class="bg-cardbg border border-cardborder rounded-3xl p-6 text-center relative overflow-hidden mb-6">
                     <p class="text-sm text-gray-400">ช่องจอดของคุณ</p>
                     <h1 class="text-5xl font-black text-crimson my-2" id="active-slot-name">P2-A4</h1>
                     <p class="text-xs text-gray-300 mb-2">ทะเบียน: <span id="active-plate-name" class="font-bold text-white bg-gray-700 px-2 py-0.5 rounded">กข 1234 กทม</span></p>
@@ -447,8 +411,8 @@
                         <div class="absolute left-0 top-0 h-full bg-emeraldLight rounded-full transition-all" id="time-progress" style="width: 100%;"></div>
                     </div>
 
-                    <div class="flex justify-center items-end gap-2 mt-2 pb-2">
-                        <span class="text-5xl font-mono font-bold text-white leading-none tracking-wider" id="active-timer">05:00</span>
+                    <div class="flex justify-center items-end gap-2">
+                        <span class="text-4xl font-mono font-bold text-white" id="active-timer">05:00</span>
                         <span class="text-sm text-gray-400 mb-1">นาที</span>
                     </div>
                 </div>
@@ -761,15 +725,7 @@
                     { text: 'ยกเลิก', class: 'bg-cardborder text-white', action: () => {} },
                     { text: 'ออกจากระบบ', class: 'bg-crimson text-white', action: () => {
                         signOut(auth).then(() => {
-                            // เคลียร์ State ให้หมดจด ป้องกันบัคข้อมูลหลุดไปบัญชีอื่น
-                            window.user = { name: '', plate: '', plates: [], phone: '', type: 'normal', points: 0, email: '', history: [] };
-                            window.activeBooking = null; 
-                            window.parkedCar = null; 
-                            window.hasEStamp = false;
-                            window.simulatedExtraTimeMs = 0;
-                            window.evFilter = false;
-                            clearInterval(window.timerInterval);
-                            
+                            window.user = { name: '', plate: '', phone: '', type: 'normal', points: 0, email: '' };
                             window.nav('onboarding');
                         });
                     }}
@@ -1256,8 +1212,6 @@
             let freeText = window.user.type === 'vip' ? 'VIP (ฟรี)' : `${branch.freeHours} ชั่วโมง`;
             if(window.hasEStamp && window.user.type !== 'vip') freeText += ' <span class="bg-orange-500 text-white text-[10px] px-1 rounded ml-1">+2 ชม. (E-Stamp)</span>';
 
-            window.selectedPaymentMethod = 'qr';
-
             c.innerHTML = `
                 <div class="border-b-2 border-dashed border-gray-300 pb-4 mb-4">
                     <h3 class="font-bold text-lg text-center mb-1">${branch.name}</h3>
@@ -1281,40 +1235,13 @@
                     <span class="font-bold text-lg">ยอดสุทธิ:</span>
                     <span class="text-4xl font-black text-crimson" id="final-fee">฿${fee}</span>
                 </div>
-
-                <div class="mt-4 mb-2">
-                    <span class="text-sm font-bold text-gray-700 block mb-2">ช่องทางการชำระเงิน</span>
-                    <div class="grid grid-cols-3 gap-2">
-                        <button class="pay-method-btn active border-2 border-crimson bg-crimson/10 text-crimson rounded-xl p-2 flex flex-col items-center justify-center gap-1 transition" onclick="window.selectPayMethod(this, 'qr')">
-                            <i class="fa-solid fa-qrcode text-xl"></i>
-                            <span class="text-[10px] font-bold">QR PromptPay</span>
-                        </button>
-                        <button class="pay-method-btn border-2 border-gray-200 bg-white text-gray-500 rounded-xl p-2 flex flex-col items-center justify-center gap-1 transition" onclick="window.selectPayMethod(this, 'visa')">
-                            <i class="fa-brands fa-cc-visa text-xl"></i>
-                            <span class="text-[10px] font-bold">Visa</span>
-                        </button>
-                        <button class="pay-method-btn border-2 border-gray-200 bg-white text-gray-500 rounded-xl p-2 flex flex-col items-center justify-center gap-1 transition" onclick="window.selectPayMethod(this, 'credit')">
-                            <i class="fa-regular fa-credit-card text-xl"></i>
-                            <span class="text-[10px] font-bold">Credit Card</span>
-                        </button>
-                    </div>
-                </div>
-
-                <button onclick="window.payReceipt()" class="w-full bg-black text-white font-bold py-4 rounded-xl mt-4 shadow-lg active:scale-95 transition">ชำระเงินและนำรถออก</button>
+                <button onclick="window.payReceipt()" class="w-full bg-black text-white font-bold py-4 rounded-xl mt-6 shadow-lg active:scale-95 transition">ชำระเงินและนำรถออก</button>
                 <div class="flex gap-2 mt-3">
                     <button onclick="window.addSimTime()" class="flex-1 bg-transparent border border-gray-300 text-gray-500 font-bold py-3 rounded-xl text-xs active:bg-gray-100 transition"><i class="fa-solid fa-forward-step"></i> +1 ชม.</button>
                     ${!window.hasEStamp ? `<button onclick="window.scanEStamp()" class="flex-1 bg-orange-100 border border-orange-300 text-orange-600 font-bold py-3 rounded-xl text-xs active:bg-orange-200 transition"><i class="fa-solid fa-qrcode"></i> สแกน E-Stamp</button>` : ''}
                 </div>
             `;
             window.currentFee = fee;
-        };
-
-        window.selectPayMethod = function(btn, method) {
-            document.querySelectorAll('.pay-method-btn').forEach(el => {
-                el.className = 'pay-method-btn border-2 border-gray-200 bg-white text-gray-500 rounded-xl p-2 flex flex-col items-center justify-center gap-1 transition';
-            });
-            btn.className = 'pay-method-btn active border-2 border-crimson bg-crimson/10 text-crimson rounded-xl p-2 flex flex-col items-center justify-center gap-1 transition';
-            window.selectedPaymentMethod = method;
         };
 
         window.addSimTime = function() {
@@ -1351,7 +1278,7 @@
             window.user.history.unshift({
                 date: historyTimeStr,
                 duration: durationStr,
-                fee: window.currentFee, // ดึงยอดเงินจาก State โดยตรงเพื่อความถูกต้องของ Data
+                fee: document.getElementById('final-fee').innerText.replace('฿',''),
                 plate: window.parkedCar.plate,
                 slot: `${window.parkedCar.floor}-${window.parkedCar.slot}`,
                 branch: branchName
