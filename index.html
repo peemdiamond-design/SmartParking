@@ -284,14 +284,21 @@
                     <div onclick="openFloor('P2')" class="glass p-5 rounded-2xl flex items-center justify-between cursor-pointer shadow-lg active:scale-95 transition">
                         <div class="flex items-center gap-4">
                             <div class="w-12 h-12 bg-gray-800 border border-gray-600 text-white rounded-xl flex justify-center items-center text-lg font-bold">P2</div>
-                            <div><h4 class="text-base font-bold text-white">ชั้นปกติ (Supermarket)</h4><p class="text-xs text-emeraldLight">ว่าง 45 ช่อง</p></div>
+                            <div><h4 class="text-base font-bold text-white">ชั้นปกติ</h4><p class="text-xs text-emeraldLight">ว่าง 45 ช่อง</p></div>
                         </div>
                         <i class="fa-solid fa-chevron-right text-white"></i>
                     </div>
                     <div onclick="openFloor('P3')" class="glass p-5 rounded-2xl flex items-center justify-between cursor-pointer shadow-lg active:scale-95 transition">
                         <div class="flex items-center gap-4">
                             <div class="w-12 h-12 bg-gray-800 border border-gray-600 text-white rounded-xl flex justify-center items-center text-lg font-bold">P3</div>
-                            <div><h4 class="text-base font-bold text-white">ชั้นปกติ (Cinema)</h4><p class="text-xs text-emeraldLight">ว่าง 12 ช่อง</p></div>
+                            <div><h4 class="text-base font-bold text-white">ชั้นปกติ</h4><p class="text-xs text-emeraldLight">ว่าง 12 ช่อง</p></div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-white"></i>
+                    </div>
+                    <div onclick="openFloor('P4')" class="glass p-5 rounded-2xl flex items-center justify-between cursor-pointer shadow-lg active:scale-95 transition">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-gray-800 border border-gray-600 text-white rounded-xl flex justify-center items-center text-lg font-bold">P4</div>
+                            <div><h4 class="text-base font-bold text-white">ชั้นปกติ</h4><p class="text-xs text-emeraldLight">ว่าง 20 ช่อง</p></div>
                         </div>
                         <i class="fa-solid fa-chevron-right text-white"></i>
                     </div>
@@ -1212,6 +1219,8 @@
             let freeText = window.user.type === 'vip' ? 'VIP (ฟรี)' : `${branch.freeHours} ชั่วโมง`;
             if(window.hasEStamp && window.user.type !== 'vip') freeText += ' <span class="bg-orange-500 text-white text-[10px] px-1 rounded ml-1">+2 ชม. (E-Stamp)</span>';
 
+            window.selectedPaymentMethod = 'qr';
+
             c.innerHTML = `
                 <div class="border-b-2 border-dashed border-gray-300 pb-4 mb-4">
                     <h3 class="font-bold text-lg text-center mb-1">${branch.name}</h3>
@@ -1235,13 +1244,40 @@
                     <span class="font-bold text-lg">ยอดสุทธิ:</span>
                     <span class="text-4xl font-black text-crimson" id="final-fee">฿${fee}</span>
                 </div>
-                <button onclick="window.payReceipt()" class="w-full bg-black text-white font-bold py-4 rounded-xl mt-6 shadow-lg active:scale-95 transition">ชำระเงินและนำรถออก</button>
+
+                <div class="mt-4 mb-2">
+                    <span class="text-sm font-bold text-gray-700 block mb-2">ช่องทางการชำระเงิน</span>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button class="pay-method-btn active border-2 border-crimson bg-crimson/10 text-crimson rounded-xl p-2 flex flex-col items-center justify-center gap-1 transition" onclick="window.selectPayMethod(this, 'qr')">
+                            <i class="fa-solid fa-qrcode text-xl"></i>
+                            <span class="text-[10px] font-bold">QR PromptPay</span>
+                        </button>
+                        <button class="pay-method-btn border-2 border-gray-200 bg-white text-gray-500 rounded-xl p-2 flex flex-col items-center justify-center gap-1 transition" onclick="window.selectPayMethod(this, 'visa')">
+                            <i class="fa-brands fa-cc-visa text-xl"></i>
+                            <span class="text-[10px] font-bold">Visa</span>
+                        </button>
+                        <button class="pay-method-btn border-2 border-gray-200 bg-white text-gray-500 rounded-xl p-2 flex flex-col items-center justify-center gap-1 transition" onclick="window.selectPayMethod(this, 'credit')">
+                            <i class="fa-regular fa-credit-card text-xl"></i>
+                            <span class="text-[10px] font-bold">Credit Card</span>
+                        </button>
+                    </div>
+                </div>
+
+                <button onclick="window.payReceipt()" class="w-full bg-black text-white font-bold py-4 rounded-xl mt-4 shadow-lg active:scale-95 transition">ชำระเงินและนำรถออก</button>
                 <div class="flex gap-2 mt-3">
                     <button onclick="window.addSimTime()" class="flex-1 bg-transparent border border-gray-300 text-gray-500 font-bold py-3 rounded-xl text-xs active:bg-gray-100 transition"><i class="fa-solid fa-forward-step"></i> +1 ชม.</button>
                     ${!window.hasEStamp ? `<button onclick="window.scanEStamp()" class="flex-1 bg-orange-100 border border-orange-300 text-orange-600 font-bold py-3 rounded-xl text-xs active:bg-orange-200 transition"><i class="fa-solid fa-qrcode"></i> สแกน E-Stamp</button>` : ''}
                 </div>
             `;
             window.currentFee = fee;
+        };
+
+        window.selectPayMethod = function(btn, method) {
+            document.querySelectorAll('.pay-method-btn').forEach(el => {
+                el.className = 'pay-method-btn border-2 border-gray-200 bg-white text-gray-500 rounded-xl p-2 flex flex-col items-center justify-center gap-1 transition';
+            });
+            btn.className = 'pay-method-btn active border-2 border-crimson bg-crimson/10 text-crimson rounded-xl p-2 flex flex-col items-center justify-center gap-1 transition';
+            window.selectedPaymentMethod = method;
         };
 
         window.addSimTime = function() {
